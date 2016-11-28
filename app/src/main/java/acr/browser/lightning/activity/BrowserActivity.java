@@ -629,33 +629,6 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
             case 1:
                 mSearchText = Constants.GOOGLE_SEARCH;
                 break;
-            case 2:
-                mSearchText = Constants.ASK_SEARCH;
-                break;
-            case 3:
-                mSearchText = Constants.BING_SEARCH;
-                break;
-            case 4:
-                mSearchText = Constants.YAHOO_SEARCH;
-                break;
-            case 5:
-                mSearchText = Constants.STARTPAGE_SEARCH;
-                break;
-            case 6:
-                mSearchText = Constants.STARTPAGE_MOBILE_SEARCH;
-                break;
-            case 7:
-                mSearchText = Constants.DUCK_SEARCH;
-                break;
-            case 8:
-                mSearchText = Constants.DUCK_LITE_SEARCH;
-                break;
-            case 9:
-                mSearchText = Constants.BAIDU_SEARCH;
-                break;
-            case 10:
-                mSearchText = Constants.YANDEX_SEARCH;
-                break;
         }
 
         updateCookiePreference().subscribeOn(Schedulers.worker()).subscribe();
@@ -1179,10 +1152,10 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                 int toolbarSize;
                 if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     // In portrait toolbar should be 56 dp tall
-                    toolbarSize = Utils.dpToPx(56);
+                    toolbarSize = Utils.dpToPx(28);
                 } else {
                     // In landscape toolbar should be 48 dp tall
-                    toolbarSize = Utils.dpToPx(52);
+                    toolbarSize = Utils.dpToPx(26);
                 }
                 mToolbar.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, toolbarSize));
                 mToolbar.setMinimumHeight(toolbarSize);

@@ -146,7 +146,6 @@
     <string name="hint_password">Password</string>
     <string name="search_suggestions">Search Suggestions</string>
     <string name="powered_by_google">Powered by Google</string>
-    <string name="powered_by_duck">Powered by DuckDuckGo</string>
     <string name="search_suggestions_off">No search suggestions</string>
     <string name="http_proxy">HTTP Proxy</string>
     <string-array name="proxy_choices_array">

@@ -16,8 +16,7 @@ import acr.browser.lightning.database.HistoryItem;
 class SuggestionsManager {
 
     public enum Source {
-        GOOGLE,
-        DUCK
+        GOOGLE
     }
 
     private static volatile boolean sIsTaskExecuting;
@@ -42,14 +41,6 @@ class SuggestionsManager {
                             }
                         }).run();
                         break;
-                    case DUCK:
-                        new DuckSuggestionsTask(query, application, new SuggestionsResult() {
-                            @Override
-                            public void resultReceived(@NonNull List<HistoryItem> searchResults) {
-                                subscriber.onNext(searchResults);
-                                subscriber.onComplete();
-                            }
-                        }).run();
                 }
                 sIsTaskExecuting = false;
             }

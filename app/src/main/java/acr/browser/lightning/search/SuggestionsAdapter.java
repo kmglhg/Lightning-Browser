@@ -295,8 +295,6 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
     private Observable<List<HistoryItem>> getSuggestionsForQuery(@NonNull final String query) {
         if (mSuggestionChoice == PreferenceManager.Suggestion.SUGGESTION_GOOGLE) {
             return SuggestionsManager.getObservable(query, mContext, SuggestionsManager.Source.GOOGLE);
-        } else if (mSuggestionChoice == PreferenceManager.Suggestion.SUGGESTION_DUCK) {
-            return SuggestionsManager.getObservable(query, mContext, SuggestionsManager.Source.DUCK);
         } else {
             return Observable.create(new Action<List<HistoryItem>>() {
                 @Override
@@ -401,10 +399,12 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
             File dir = new File(app.getCacheDir().toString());
             String[] fileList = dir.list(new NameFilter());
             long earliestTimeAllowed = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1);
-            for (String fileName : fileList) {
-                File file = new File(dir.getPath() + fileName);
-                if (earliestTimeAllowed > file.lastModified()) {
-                    file.delete();
+            if (fileList != null) {
+                for (String fileName : fileList) {
+                    File file = new File(dir.getPath() + fileName);
+                    if (earliestTimeAllowed > file.lastModified()) {
+                        file.delete();
+                    }
                 }
             }
         }
