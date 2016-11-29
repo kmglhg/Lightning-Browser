@@ -7,7 +7,7 @@ android {
     buildToolsVersion "24.0.3"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 19
         targetSdkVersion 24
         versionName "4.4.1"
         vectorDrawables.useSupportLibrary = true
@@ -104,4 +104,7 @@ dependencies {
     // memory leak analysis
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
+
+    // image library
+    compile 'com.github.bumptech.glide:glide:3.5.2'
 }

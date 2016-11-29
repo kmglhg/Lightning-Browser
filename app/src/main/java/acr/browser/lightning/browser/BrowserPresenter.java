@@ -185,7 +185,7 @@ public class BrowserPresenter {
         mView.notifyTabViewRemoved(position);
 
         if (afterTab == null) {
-            mView.closeBrowser();
+//            mView.closeBrowser();
             return;
         } else if (afterTab != currentTab) {
             //TODO remove this?

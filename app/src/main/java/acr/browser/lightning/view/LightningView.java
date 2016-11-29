@@ -1205,7 +1205,7 @@ public class LightningView {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            final String url = msg.getData().getString("url");
+            final String url = msg.getData().getString("src");
             LightningView view = mReference.get();
             if (view != null) {
                 view.longClickPage(url);

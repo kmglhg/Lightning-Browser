@@ -42,6 +42,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -87,8 +89,18 @@ import com.anthonycr.progress.AnimatedProgressBar;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -711,6 +723,46 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                     HistoryItem shortcut = new HistoryItem(currentView.getUrl(), currentView.getTitle());
                     shortcut.setBitmap(currentView.getFavicon());
                     Utils.createShortcut(this, shortcut);
+                }
+                return true;
+            case R.id.action_get_all_images:
+                if (currentView != null && currentView.getWebView() != null) {
+                    currentView.getWebView().evaluateJavascript("(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
+                        new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String html) {
+                                JsonReader reader = new JsonReader(new StringReader(html));
+                                reader.setLenient(true);
+                                try {
+                                    if (reader.peek() != JsonToken.NULL) {
+                                        if (reader.peek() == JsonToken.STRING) {
+                                            String msg = reader.nextString();
+                                            if (msg != null) {
+                                                Document doc = Jsoup.parse(msg);
+                                                Elements img = doc.getElementsByTag("img");
+                                                ArrayList<String> images = new ArrayList<String>();
+                                                for (Element el : img) {
+                                                    String src = el.absUrl("src");
+                                                    if (src != null && src.length() > 0) {
+                                                        images.add(src);
+                                                    }
+                                                }
+                                                Intent intent = new Intent(BrowserActivity.this, GalleryActivity.class);
+                                                intent.putStringArrayListExtra("images", images);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    }
+                                } catch (IOException e) {
+                                } finally {
+                                    try {
+                                        reader.close();
+                                    } catch (IOException e) {
+                                    }
+                                }
+                            }
+                        }
+                    );
                 }
                 return true;
             case R.id.action_new_tab:
