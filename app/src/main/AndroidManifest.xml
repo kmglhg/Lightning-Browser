@@ -150,6 +150,14 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.GalleryActivity"
+            android:theme="@style/Theme.SettingsTheme">
+        </activity>
+        <activity
+            android:name=".activity.GalleryDetailActivity"
+            android:theme="@style/Theme.SettingsTheme">
+        </activity>
     </application>
 
 </manifest>

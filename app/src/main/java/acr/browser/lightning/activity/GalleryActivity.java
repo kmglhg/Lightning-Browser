@@ -1,102 +1,123 @@
 package acr.browser.lightning.activity;
 
 import acr.browser.lightning.R;
+import acr.browser.lightning.app.BrowserApp;
+import acr.browser.lightning.download.DownloadHandler;
+import acr.browser.lightning.preference.PreferenceManager;
 import acr.browser.lightning.utils.GridViewAdapter;
+import acr.browser.lightning.utils.Utils;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Gallery;
 import android.widget.GridView;
-import android.widget.TextView;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.inject.Inject;
 
 /**
  * Created by kmglh on 2016-11-29.
  */
-public class GalleryActivity extends AppCompatActivity {
+public class GalleryActivity extends Activity {
     private GridView gridView;
     private GridViewAdapter gridAdapter;
     private List<String> imageItems;
-    private String imagePath="";
-    private File savedFileDestination;
+    private List<String> selectedImageItems;
+
+    @Inject PreferenceManager mPreferenceManager;
+
+    private String userAgent;
+
+    private String downloadPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery_layout);
 
-        imagePath =  Environment.getExternalStorageDirectory().toString() + "/instinctcoder/gridview/";
-        imageItems = new ArrayList<>();
+        BrowserApp.getAppComponent().inject(this);
 
+        Intent intent = getIntent();
+        imageItems = intent.getStringArrayListExtra("images");
+        selectedImageItems = new ArrayList<>();
 
-        Bundle b = getIntent().getExtras();
-        if (b != null) {
-            imageItems = b.getStringArrayList("images");
-        }
-
-//        getImages();
+        userAgent = intent.getStringExtra("userAgent");
 
         gridView = (GridView) findViewById(R.id.gridView);
         gridAdapter = new GridViewAdapter(this, R.layout.grid_item, imageItems);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                String imagePath =   parent.getAdapter().getItem(position).toString();
-                Intent intent = new Intent(GalleryActivity.this, GalleryDetailActivity.class);
-                intent.putExtra("imagePath", imagePath);
 
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String imageUri = parent.getAdapter().getItem(position).toString();
+                Intent intent = new Intent(GalleryActivity.this, GalleryDetailActivity.class);
+                intent.putExtra("imageUri", imageUri);
                 startActivity(intent);
+                return false;
+            }
+        });
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                String imageUri = parent.getAdapter().getItem(position).toString();
+
+                if (v.getAlpha() == 1.0) {
+                    v.setAlpha(.5f);
+                    selectedImageItems.remove(imageUri);
+                } else {
+                    v.setAlpha(1f);
+                    selectedImageItems.add(imageUri);
+                }
             }
         });
         gridView.setAdapter(gridAdapter);
-    }
 
-    private List<String> getImages(){
-        new File(imagePath ).mkdirs();
+        Button downloadBtn = (Button) findViewById(R.id.downloadBtn);
+        downloadBtn.setOnClickListener(new AdapterView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        File fileTarget = new File(imagePath);
-        File[] files = fileTarget.listFiles();
+                downloadPath = DownloadHandler.DEFAULT_DOWNLOAD_PATH + "/xxx";
+                Log.d("DIRECTORY", downloadPath);
 
-        imageItems.clear();
-
-        if (files!=null){
-            for (File file: files){
-                imageItems.add(file.getAbsolutePath());
+                new Timer().schedule(new TimerTask() {
+                    public void run() {
+                        if (selectedImageItems != null && selectedImageItems.size() > 0) {
+                            for (String uri : selectedImageItems) {
+                                mPreferenceManager.setDownloadDirectory(downloadPath);
+                                Utils.downloadFile(GalleryActivity.this, mPreferenceManager, uri, userAgent, "attachment");
+                            }
+                        }
+                    }
+                }, 300);
             }
-        }
-
-        return imageItems;
+        });
     }
 
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data)
     {
-//        getImages();
-        gridAdapter.notifyDataSetChanged(); //Notify adapter to refresh gridView
+        gridAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString("destination", savedFileDestination.getName());
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
-        String sPath = savedInstanceState.getString("destination");
-        savedFileDestination = new File(sPath);
     }
 
     @Override

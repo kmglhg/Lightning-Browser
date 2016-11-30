@@ -3,6 +3,7 @@ package acr.browser.lightning.app;
 import javax.inject.Singleton;
 
 import acr.browser.lightning.activity.BrowserActivity;
+import acr.browser.lightning.activity.GalleryActivity;
 import acr.browser.lightning.activity.ReadingActivity;
 import acr.browser.lightning.activity.TabsManager;
 import acr.browser.lightning.activity.ThemableBrowserActivity;
@@ -69,5 +70,7 @@ public interface AppComponent {
     void inject(DebugSettingsFragment fragment);
 
     void inject(SuggestionsAdapter suggestionsAdapter);
+
+    void inject(GalleryActivity galleryActivity);
 
 }

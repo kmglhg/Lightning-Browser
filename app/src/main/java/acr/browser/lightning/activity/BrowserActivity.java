@@ -727,6 +727,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                 return true;
             case R.id.action_get_all_images:
                 if (currentView != null && currentView.getWebView() != null) {
+
                     currentView.getWebView().evaluateJavascript("(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
                         new ValueCallback<String>() {
                             @Override
@@ -749,6 +750,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                                                 }
                                                 Intent intent = new Intent(BrowserActivity.this, GalleryActivity.class);
                                                 intent.putStringArrayListExtra("images", images);
+                                                intent.putExtra("userAgent", mTabsManager.getCurrentTab().getWebView().getSettings().getUserAgentString());
                                                 startActivity(intent);
                                             }
                                         }
@@ -818,6 +820,13 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         }
     }
 
+    private void startGalleryActivity(ArrayList<String> images) {
+
+//        startActivity(new Intent(this, SettingsActivity.class));
+        Intent intent = new Intent(this, GalleryActivity.class);
+        intent.putStringArrayListExtra("images", images);
+        startActivity(intent);
+    }
     // By using a manager, adds a bookmark and notifies third parties about that
     private void addBookmark(final String title, final String url) {
         final HistoryItem item = !mBookmarkManager.isBookmark(url)
