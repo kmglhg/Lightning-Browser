@@ -2,10 +2,9 @@ package acr.browser.lightning.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import acr.browser.lightning.R;
 import uk.co.senab.photoview.PhotoView;
@@ -26,8 +25,12 @@ public class GalleryDetailActivity extends Activity {
         PhotoView photoView = (PhotoView) findViewById(R.id.image);
         Glide.with(GalleryDetailActivity.this)
                 .load(imageUri)
+//                .skipMemoryCache(true)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .fitCenter()
                 .centerCrop()
                 .into(photoView);
     }
+
+
 }
