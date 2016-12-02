@@ -395,6 +395,18 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
 
         initializeSearchSuggestions(mSearch);
 
+        mSearch.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.d("TEST", "11111111111111111111");
+                Log.d("TEST", "11111111111111111111");
+                Log.d("TEST", "11111111111111111111");
+                Log.d("TEST", "11111111111111111111");
+                Log.d("TEST", "11111111111111111111");
+                return false;
+            }
+        });
+
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_right_shadow, GravityCompat.END);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_left_shadow, GravityCompat.START);
 
