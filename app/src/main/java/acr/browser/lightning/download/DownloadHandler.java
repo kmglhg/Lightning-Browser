@@ -248,7 +248,7 @@ public class DownloadHandler {
             }
             // We must have long pressed on a link or image to download it. We
             // are not sure of the mimetype in this case, so do a head request
-            new FetchUrlMimeType(context, request, addressString, cookies, userAgent).start();
+            new FetchUrlMimeType(context, request, addressString, cookies, userAgent, downloadFolder.getPath().split("/")[downloadFolder.getPath().split("/").length - 1]).start();
         } else {
             Log.d(TAG, "Valid mimetype, attempting to download");
             final DownloadManager manager = (DownloadManager) context

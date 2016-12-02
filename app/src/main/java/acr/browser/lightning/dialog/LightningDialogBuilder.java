@@ -275,6 +275,12 @@ public class LightningDialogBuilder {
                 public void onClick() {
                     Utils.downloadFile(activity, mPreferenceManager, url, userAgent, "attachment");
                 }
+            },
+            new BrowserDialog.Item(R.string.dialog_image_search) {
+                @Override
+                public void onClick() {
+                    mEventBus.post(new BrowserEvents.OpenUrlInNewTab(Constants.GOOGLE_IMAGE_SEARCH + url));
+                }
             });
     }
 

@@ -40,14 +40,16 @@ class FetchUrlMimeType extends Thread {
     private final String mUri;
     private final String mCookies;
     private final String mUserAgent;
+    private final String mDownloadPath;
 
     public FetchUrlMimeType(Activity context, DownloadManager.Request request, String uri,
-                            String cookies, String userAgent) {
+                            String cookies, String userAgent, String downloadPath) {
         mContext = context;
         mRequest = request;
         mUri = uri;
         mCookies = cookies;
         mUserAgent = userAgent;
+        mDownloadPath = downloadPath;
     }
 
     @Override
@@ -102,7 +104,7 @@ class FetchUrlMimeType extends Thread {
                 }
             }
             filename = URLUtil.guessFileName(mUri, contentDisposition, mimeType);
-            mRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+            mRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS + "/" + mDownloadPath, filename);
         }
 
         // Start the download

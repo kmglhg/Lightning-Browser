@@ -38,10 +38,14 @@ public class GetAllImagesTask extends AsyncTask<String, Void, Boolean> {
             if (img != null && img.size() > 0) {
                 images = new ArrayList<>();
                 for (Element el : img) {
-                    String src = uri.resolve(el.attr("src")).toString();
-                    if (src != null && src.length() > 0) {
-                        if (!images.contains(src)) {
-                            images.add(src);
+                    String src = el.absUrl("src").trim();
+                    if (src == null || src.length() <= 0) {
+                        src = el.attr("src").trim();
+                    }
+                    String uriSrc = uri.resolve(src).toString();
+                    if (uriSrc != null && uriSrc.length() > 0) {
+                        if (!images.contains(uriSrc)) {
+                            images.add(uriSrc);
                         }
                     }
                 }

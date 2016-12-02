@@ -101,7 +101,9 @@ import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -737,7 +739,8 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                     public void callback(ArrayList<String> images) {
                         Intent intent = new Intent(BrowserActivity.this, GalleryActivity.class);
                         intent.putStringArrayListExtra("images", images);
-                        intent.putExtra("userAgent", mTabsManager.getCurrentTab().getWebView().getSettings().getUserAgentString());
+                        intent.putExtra("path", getPath(mTabsManager.getCurrentWebView().getUrl()));
+                        intent.putExtra("userAgent", mTabsManager.getCurrentWebView().getSettings().getUserAgentString());
                         startActivity(intent);
                     }
                 }).execute(currentUrl);
@@ -793,6 +796,20 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public static String getPath(String url) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String now = sdf.format(Calendar.getInstance().getTime());
+        String domain = null;
+        try {
+            URI uri = new URI(url);
+            domain = uri.getHost();
+            domain = domain.startsWith("www.") ? domain.substring(4) : domain;
+        } catch (URISyntaxException e) {
+        }
+
+        return domain + "_" + now;
     }
 
     // By using a manager, adds a bookmark and notifies third parties about that
@@ -1181,10 +1198,10 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                 int toolbarSize;
                 if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     // In portrait toolbar should be 56 dp tall
-                    toolbarSize = Utils.dpToPx(28);
+                    toolbarSize = Utils.dpToPx(30);
                 } else {
                     // In landscape toolbar should be 48 dp tall
-                    toolbarSize = Utils.dpToPx(26);
+                    toolbarSize = Utils.dpToPx(30);
                 }
                 mToolbar.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, toolbarSize));
                 mToolbar.setMinimumHeight(toolbarSize);

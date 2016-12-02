@@ -9,28 +9,16 @@ import acr.browser.lightning.utils.Utils;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Gallery;
 import android.widget.GridView;
 
-import com.bumptech.glide.Glide;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
@@ -48,6 +36,7 @@ public class GalleryActivity extends Activity {
     private String userAgent;
 
     private String downloadPath;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +50,7 @@ public class GalleryActivity extends Activity {
         selectedImageItems = new ArrayList<>();
 
         userAgent = intent.getStringExtra("userAgent");
+        path = intent.getStringExtra("path");
 
         gridView = (GridView) findViewById(R.id.gridView);
         gridAdapter = new GridViewAdapter(this, R.layout.grid_item, imageItems);
@@ -98,52 +88,18 @@ public class GalleryActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                downloadPath = DownloadHandler.DEFAULT_DOWNLOAD_PATH + "/xxx/";
-                Log.d("DIRECTORY", downloadPath);
+                downloadPath = DownloadHandler.DEFAULT_DOWNLOAD_PATH + "/" + path;
 
-//                new Timer().schedule(new TimerTask() {
-//                    @Override
-//                    public void run() {
-//
-//                        if (selectedImageItems != null && selectedImageItems.size() > 0) {
-//                            for (String uri : selectedImageItems) {
-//                                String fileName = URLUtil.guessFileName(uri, null, null);
-//
-//                                File fileCacheItem = new File(downloadPath + fileName);
-//                                OutputStream out = null;
-//
-//                                try {
-//                                    Bitmap bitmap = Glide.with(GalleryActivity.this).load(uri).asBitmap().into(-1, -1).get();
-//
-//                                    fileCacheItem.createNewFile();
-//                                    out = new FileOutputStream(fileCacheItem);
-//                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-//                                    out.close();
-//                                } catch (final ExecutionException e) {
-//                                } catch (final InterruptedException e) {
-//                                } catch (final FileNotFoundException e) {
-//                                } catch (final IOException e) {
-//                                } finally {
-//                                    try {
-//                                        out.close();
-//                                    } catch (final IOException e) {
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }, 300);
-
-//                new Timer().schedule(new TimerTask() {
-//                    public void run() {
-//                        if (selectedImageItems != null && selectedImageItems.size() > 0) {
-//                            for (String uri : selectedImageItems) {
-//                                mPreferenceManager.setDownloadDirectory(downloadPath);
-//                                Utils.downloadFile(GalleryActivity.this, mPreferenceManager, uri, userAgent, "attachment");
-//                            }
-//                        }
-//                    }
-//                }, 300);
+                new Timer().schedule(new TimerTask() {
+                    public void run() {
+                        if (selectedImageItems != null && selectedImageItems.size() > 0) {
+                            for (String uri : selectedImageItems) {
+                                mPreferenceManager.setDownloadDirectory(downloadPath);
+                                Utils.downloadFile(GalleryActivity.this, mPreferenceManager, uri, userAgent, "attachment");
+                            }
+                        }
+                    }
+                }, 300);
             }
         });
     }

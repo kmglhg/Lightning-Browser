@@ -27,6 +27,10 @@ public final class Constants {
     public static final String NAVER_SEARCH = "https://m.search.naver.com/search.naver?where=m&sm=mtp_hty&query=";
     public static final String WIKIPEDIA_SEARCH = "https://ko.m.wikipedia.org/wiki/";
 
+//    public static final String GOOGLE_IMAGE_SEARCH = "https://www.google.com/search?tbm=isch&q=";
+    public static final String GOOGLE_IMAGE_SEARCH = "https://www.google.com/searchbyimage?&image_url=";
+
+
     // Custom local page schemes
     public static final String SCHEME_HOMEPAGE = "about:home";
     public static final String SCHEME_BLANK = "about:blank";
