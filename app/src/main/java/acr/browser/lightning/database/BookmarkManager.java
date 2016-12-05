@@ -546,9 +546,9 @@ public class BookmarkManager {
                 return 0;
             }
             if (o1.isFolder() == o2.isFolder()) {
-                return o1.getTitle().toLowerCase(Locale.getDefault())
-                    .compareTo(o2.getTitle().toLowerCase(Locale.getDefault()));
-
+                /*return o1.getTitle().toLowerCase(Locale.getDefault())
+                    .compareTo(o2.getTitle().toLowerCase(Locale.getDefault()));*/
+                return o1.getOrder() - o2.getOrder();
             } else {
                 return o1.isFolder() ? 1 : -1;
             }

@@ -106,11 +106,9 @@ public class TabsManager {
      *
      * @param activity  the activity needed to create tabs.
      * @param intent    the intent that started the browser activity.
-     * @param incognito whether or not we are in incognito mode.
      */
     public synchronized Observable<Void> initializeTabs(@NonNull final Activity activity,
-                                                        @Nullable final Intent intent,
-                                                        final boolean incognito) {
+                                                        @Nullable final Intent intent) {
         return Observable.create(new Action<Void>() {
             @Override
             public void onSubscribe(@NonNull final Subscriber<Void> subscriber) {
@@ -123,22 +121,15 @@ public class TabsManager {
                     url = intent.getDataString();
                 }
 
-                // If incognito, only create one tab
-                if (incognito) {
-                    newTab(activity, url, true);
-                    subscriber.onComplete();
-                    return;
-                }
-
                 Log.d(TAG, "URL from intent: " + url);
                 mCurrentTab = null;
                 if (mPreferenceManager.getRestoreLostTabsEnabled()) {
                     restoreLostTabs(url, activity, subscriber);
                 } else {
                     if (!TextUtils.isEmpty(url)) {
-                        newTab(activity, url, false);
+                        newTab(activity, url);
                     } else {
-                        newTab(activity, null, false);
+                        newTab(activity, null);
                     }
                     finishInitialization();
                     subscriber.onComplete();
@@ -156,7 +147,7 @@ public class TabsManager {
             .observeOn(Schedulers.main()).subscribe(new OnSubscribe<Bundle>() {
             @Override
             public void onNext(Bundle item) {
-                LightningView tab = newTab(activity, "", false);
+                LightningView tab = newTab(activity, "");
                 String url = item.getString(URL_KEY);
                 if (url != null && tab.getWebView() != null) {
                     if (UrlUtils.isBookmarkUrl(url)) {
@@ -183,7 +174,7 @@ public class TabsManager {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
                                     if (mTabList.isEmpty()) {
-                                        newTab(activity, null, false);
+                                        newTab(activity, null);
                                     }
                                     finishInitialization();
                                     subscriber.onComplete();
@@ -193,21 +184,21 @@ public class TabsManager {
                             .setPositiveButton(R.string.action_open, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    newTab(activity, url, false);
+                                    newTab(activity, url);
                                 }
                             }).show();
                         BrowserDialog.setDialogSize(activity, dialog);
                     } else {
-                        newTab(activity, url, false);
+                        newTab(activity, url);
                         if (mTabList.isEmpty()) {
-                            newTab(activity, null, false);
+                            newTab(activity, null);
                         }
                         finishInitialization();
                         subscriber.onComplete();
                     }
                 } else {
                     if (mTabList.isEmpty()) {
-                        newTab(activity, null, false);
+                        newTab(activity, null);
                     }
                     finishInitialization();
                     subscriber.onComplete();
@@ -358,16 +349,14 @@ public class TabsManager {
      *
      * @param activity    the activity needed to create the tab.
      * @param url         the URL to initialize the tab with.
-     * @param isIncognito whether the tab is an incognito
      *                    tab or not.
      * @return a valid initialized tab.
      */
     @NonNull
     public synchronized LightningView newTab(@NonNull final Activity activity,
-                                             @Nullable final String url,
-                                             final boolean isIncognito) {
+                                             @Nullable final String url) {
         Log.d(TAG, "New tab");
-        final LightningView tab = new LightningView(activity, url, isIncognito);
+        final LightningView tab = new LightningView(activity, url);
         mTabList.add(tab);
         if (mTabNumberListener != null) {
             mTabNumberListener.tabNumberChanged(size());

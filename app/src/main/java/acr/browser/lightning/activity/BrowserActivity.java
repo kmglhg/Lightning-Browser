@@ -239,8 +239,6 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
     private static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
         LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-    protected abstract boolean isIncognito();
-
     public abstract void closeActivity();
 
     public abstract void updateHistory(@Nullable final String title, @NonNull final String url);
@@ -255,7 +253,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         ButterKnife.bind(this);
 
         mTabsManager = new TabsManager();
-        mPresenter = new BrowserPresenter(this, isIncognito());
+        mPresenter = new BrowserPresenter(this);
 
         initialize(savedInstanceState);
     }
@@ -266,7 +264,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         ActionBar actionBar = getSupportActionBar();
 
         //TODO make sure dark theme flag gets set correctly
-        mDarkTheme = mPreferences.getUseTheme() != 0 || isIncognito();
+        mDarkTheme = mPreferences.getUseTheme() != 0;
         mIconColor = mDarkTheme ? ThemeUtils.getIconDarkThemeColor(this) : ThemeUtils.getIconLightThemeColor(this);
         mDisabledIconColor = mDarkTheme ? ContextCompat.getColor(this, R.color.icon_dark_theme_disabled) :
             ContextCompat.getColor(this, R.color.icon_light_theme_disabled);
@@ -315,14 +313,12 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         final TabsFragment tabsFragment = new TabsFragment();
         mTabsView = tabsFragment;
         final Bundle tabsFragmentArguments = new Bundle();
-        tabsFragmentArguments.putBoolean(TabsFragment.IS_INCOGNITO, isIncognito());
         tabsFragmentArguments.putBoolean(TabsFragment.VERTICAL_MODE, mShowTabsInDrawer);
         tabsFragment.setArguments(tabsFragmentArguments);
 
         final BookmarksFragment bookmarksFragment = new BookmarksFragment();
         mBookmarksView = bookmarksFragment;
         final Bundle bookmarksFragmentArguments = new Bundle();
-        bookmarksFragmentArguments.putBoolean(BookmarksFragment.INCOGNITO_MODE, isIncognito());
         bookmarksFragment.setArguments(bookmarksFragmentArguments);
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -452,7 +448,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
 
     void panicClean() {
         Log.d(TAG, "Closing browser");
-        mTabsManager.newTab(this, "", false);
+        mTabsManager.newTab(this, "");
         mTabsManager.switchToTab(0);
         mTabsManager.clearSavedState();
         HistoryPage.deleteHistoryPage(getApplication());
@@ -626,11 +622,11 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         mFullScreen = mPreferences.getFullScreenEnabled();
         boolean colorMode = mPreferences.getColorModeEnabled();
         colorMode &= !mDarkTheme;
-        if (!isIncognito() && !colorMode && !mDarkTheme && mWebpageBitmap != null) {
+        if (!colorMode && !mDarkTheme && mWebpageBitmap != null) {
             changeToolbarBackground(mWebpageBitmap, null);
-        } else if (!isIncognito() && currentView != null && !mDarkTheme) {
+        } else if (currentView != null && !mDarkTheme) {
             changeToolbarBackground(currentView.getFavicon(), null);
-        } else if (!isIncognito() && !mDarkTheme && mWebpageBitmap != null) {
+        } else if (!mDarkTheme && mWebpageBitmap != null) {
             changeToolbarBackground(mWebpageBitmap, null);
         }
 
@@ -759,10 +755,6 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                 return true;
             case R.id.action_new_tab:
                 newTab(null, true);
-                return true;
-            case R.id.action_incognito:
-                startActivity(new Intent(this, IncognitoActivity.class));
-                overridePendingTransition(R.anim.slide_up_in, R.anim.fade_out_scale);
                 return true;
             case R.id.action_share:
                 if (currentUrl != null && !UrlUtils.isSpecialUrl(currentUrl)) {
@@ -1165,23 +1157,21 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
 
     void performExitCleanUp() {
         final LightningView currentTab = mTabsManager.getCurrentTab();
-        if (mPreferences.getClearCacheExit() && currentTab != null && !isIncognito()) {
+        if (mPreferences.getClearCacheExit() && currentTab != null) {
             WebUtils.clearCache(currentTab.getWebView());
             Log.d(TAG, "Cache Cleared");
         }
-        if (mPreferences.getClearHistoryExitEnabled() && !isIncognito()) {
+        if (mPreferences.getClearHistoryExitEnabled()) {
             WebUtils.clearHistory(this, mHistoryDatabase);
             Log.d(TAG, "History Cleared");
         }
-        if (mPreferences.getClearCookiesExitEnabled() && !isIncognito()) {
+        if (mPreferences.getClearCookiesExitEnabled()) {
             WebUtils.clearCookies(this);
             Log.d(TAG, "Cookies Cleared");
         }
-        if (mPreferences.getClearWebStorageExitEnabled() && !isIncognito()) {
+        if (mPreferences.getClearWebStorageExitEnabled()) {
             WebUtils.clearWebStorage();
             Log.d(TAG, "WebStorage Cleared");
-        } else if (isIncognito()) {
-            WebUtils.clearWebStorage();     // We want to make sure incognito mode is secure
         }
         mSuggestionsAdapter.clearCache();
     }
@@ -1284,7 +1274,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "Receiver was not registered", e);
         }
-        if (isIncognito() && isFinishing()) {
+        if (isFinishing()) {
             overridePendingTransition(R.anim.fade_in_scale, R.anim.slide_down_out);
         }
 
@@ -1534,7 +1524,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
      */
     private void initializeSearchSuggestions(final AutoCompleteTextView getUrl) {
 
-        mSuggestionsAdapter = new SuggestionsAdapter(this, mDarkTheme, isIncognito());
+        mSuggestionsAdapter = new SuggestionsAdapter(this, mDarkTheme);
 
         getUrl.setThreshold(1);
         getUrl.setDropDownWidth(-1);
@@ -2239,11 +2229,6 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                 newTab(event.url, true);
             } else if (event.location == BrowserEvents.OpenUrlInNewTab.Location.BACKGROUND) {
                 newTab(event.url, false);
-            } else if (event.location == BrowserEvents.OpenUrlInNewTab.Location.INCOGNITO) {
-                Intent intent = new Intent(BrowserActivity.this, IncognitoActivity.class);
-                intent.setData(Uri.parse(event.url));
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_up_in, R.anim.fade_out_scale);
             }
         }
 

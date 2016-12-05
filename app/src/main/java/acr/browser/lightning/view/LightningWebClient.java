@@ -302,10 +302,6 @@ public class LightningWebClient extends WebViewClient {
         // If the headers are empty, the user has not expressed the desire
         // to use them and therefore we can revert back to the old way of loading
         if (headers.isEmpty()) {
-            if (mLightningView.isIncognito()) {
-                // If we are in incognito, immediately load, we don't want the url to leave the app
-                return false;
-            }
             if (url.startsWith(Constants.ABOUT)) {
                 // If this is an about page, immediately load, we don't need to leave the app
                 return false;
@@ -316,7 +312,7 @@ public class LightningWebClient extends WebViewClient {
                 return true;
             }
         } else {
-            if (mLightningView.isIncognito() && Utils.doesSupportHeaders()) {
+            if (Utils.doesSupportHeaders()) {
                 // If we are in incognito, immediately load, we don't want the url to leave the app
                 view.loadUrl(url, headers);
                 return true;

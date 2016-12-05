@@ -100,7 +100,6 @@ public class LightningView {
     @NonNull private final Activity mActivity;
     @NonNull private final Paint mPaint = new Paint();
     @Nullable private Object mTag;
-    private final boolean mIsIncognitoTab;
     private boolean isForegroundTab;
     private boolean mInvertPage = false;
     private boolean mToggleDesktop = false;
@@ -113,7 +112,7 @@ public class LightningView {
     @Inject ProxyUtils mProxyUtils;
     @Inject BookmarkManager mBookmarkManager;
 
-    public LightningView(@NonNull Activity activity, @Nullable String url, boolean isIncognito) {
+    public LightningView(@NonNull Activity activity, @Nullable String url) {
         BrowserApp.getAppComponent().inject(this);
         mActivity = activity;
         mUIController = (UIController) activity;
@@ -121,7 +120,6 @@ public class LightningView {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
             mWebView.setId(View.generateViewId());
         }
-        mIsIncognitoTab = isIncognito;
         mTitle = new LightningViewTitle(activity);
 
         sMaxFling = ViewConfiguration.get(activity).getScaledMaximumFlingVelocity();
@@ -260,11 +258,8 @@ public class LightningView {
         sHomepage = mPreferences.getHomepage();
         setColorMode(mPreferences.getRenderingMode());
 
-        if (!mIsIncognitoTab) {
-            settings.setGeolocationEnabled(mPreferences.getLocationEnabled());
-        } else {
-            settings.setGeolocationEnabled(false);
-        }
+        settings.setGeolocationEnabled(mPreferences.getLocationEnabled());
+
         if (API < Build.VERSION_CODES.KITKAT) {
             switch (mPreferences.getFlashSupport()) {
                 case 0:
@@ -286,18 +281,12 @@ public class LightningView {
 
         setUserAgent(context, mPreferences.getUserAgentChoice());
 
-        if (mPreferences.getSavePasswordsEnabled() && !mIsIncognitoTab) {
+        if (mPreferences.getSavePasswordsEnabled()) {
             if (API < Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 //noinspection deprecation
                 settings.setSavePassword(true);
             }
             settings.setSaveFormData(true);
-        } else {
-            if (API < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                //noinspection deprecation
-                settings.setSavePassword(false);
-            }
-            settings.setSaveFormData(false);
         }
 
         if (mPreferences.getJavaScriptEnabled()) {
@@ -324,11 +313,9 @@ public class LightningView {
         }
 
         settings.setBlockNetworkImage(mPreferences.getBlockImagesEnabled());
-        if (!mIsIncognitoTab) {
-            settings.setSupportMultipleWindows(mPreferences.getPopupsEnabled());
-        } else {
-            settings.setSupportMultipleWindows(false);
-        }
+
+        settings.setSupportMultipleWindows(mPreferences.getPopupsEnabled());
+
         settings.setUseWideViewPort(mPreferences.getUseWideViewportEnabled());
         settings.setLoadWithOverviewMode(mPreferences.getOverviewModeEnabled());
         switch (mPreferences.getTextSize()) {
@@ -378,23 +365,15 @@ public class LightningView {
         if (API > Build.VERSION_CODES.JELLY_BEAN) {
             settings.setMediaPlaybackRequiresUserGesture(true);
         }
-        if (API >= Build.VERSION_CODES.LOLLIPOP && !mIsIncognitoTab) {
+        if (API >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-        } else if (API >= Build.VERSION_CODES.LOLLIPOP) {
-            // We're in Incognito mode, reject
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         }
-        if (!mIsIncognitoTab) {
-            settings.setDomStorageEnabled(true);
-            settings.setAppCacheEnabled(true);
-            settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-            settings.setDatabaseEnabled(true);
-        } else {
-            settings.setDomStorageEnabled(false);
-            settings.setAppCacheEnabled(false);
-            settings.setDatabaseEnabled(false);
-            settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        }
+
+        settings.setDomStorageEnabled(true);
+        settings.setAppCacheEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setDatabaseEnabled(true);
+
         settings.setSupportZoom(true);
         settings.setBuiltInZoomControls(true);
         settings.setDisplayZoomControls(false);
@@ -472,15 +451,6 @@ public class LightningView {
     @NonNull
     public LightningViewTitle getTitleInfo() {
         return mTitle;
-    }
-
-    /**
-     * Returns whether or not the current tab is incognito or not.
-     *
-     * @return true if this tab is incognito, false otherwise
-     */
-    public boolean isIncognito() {
-        return mIsIncognitoTab;
     }
 
     /**

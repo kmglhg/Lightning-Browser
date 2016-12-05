@@ -39,9 +39,6 @@
         android:id="@+id/action_new_tab"
         android:title="@string/action_new_tab"/>
     <item
-        android:id="@+id/action_incognito"
-        android:title="@string/action_incognito"/>
-    <item
         android:id="@+id/action_share"
         android:title="@string/action_share"/>
     <item

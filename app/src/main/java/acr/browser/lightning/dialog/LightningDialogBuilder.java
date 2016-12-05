@@ -94,12 +94,6 @@ public class LightningDialogBuilder {
                     mEventBus.post(new BrowserEvents.OpenUrlInNewTab(item.getUrl(), BrowserEvents.OpenUrlInNewTab.Location.BACKGROUND));
                 }
             },
-            new BrowserDialog.Item(R.string.dialog_open_incognito_tab, activity instanceof MainActivity) {
-                @Override
-                public void onClick() {
-                    mEventBus.post(new BrowserEvents.OpenUrlInNewTab(item.getUrl(), BrowserEvents.OpenUrlInNewTab.Location.INCOGNITO));
-                }
-            },
             new BrowserDialog.Item(R.string.dialog_copy_link) {
                 @Override
                 public void onClick() {
@@ -210,12 +204,6 @@ public class LightningDialogBuilder {
                     mEventBus.post(new BrowserEvents.OpenUrlInNewTab(url, BrowserEvents.OpenUrlInNewTab.Location.BACKGROUND));
                 }
             },
-            new BrowserDialog.Item(R.string.dialog_open_incognito_tab, activity instanceof MainActivity) {
-                @Override
-                public void onClick() {
-                    mEventBus.post(new BrowserEvents.OpenUrlInNewTab(url, BrowserEvents.OpenUrlInNewTab.Location.INCOGNITO));
-                }
-            },
             new BrowserDialog.Item(R.string.dialog_copy_link) {
                 @Override
                 public void onClick() {
@@ -258,12 +246,6 @@ public class LightningDialogBuilder {
                     mEventBus.post(new BrowserEvents.OpenUrlInNewTab(url, BrowserEvents.OpenUrlInNewTab.Location.BACKGROUND));
                 }
             },
-            new BrowserDialog.Item(R.string.dialog_open_incognito_tab, activity instanceof MainActivity) {
-                @Override
-                public void onClick() {
-                    mEventBus.post(new BrowserEvents.OpenUrlInNewTab(url, BrowserEvents.OpenUrlInNewTab.Location.INCOGNITO));
-                }
-            },
             new BrowserDialog.Item(R.string.dialog_copy_link) {
                 @Override
                 public void onClick() {
@@ -296,12 +278,6 @@ public class LightningDialogBuilder {
                 @Override
                 public void onClick() {
                     mEventBus.post(new BrowserEvents.OpenUrlInNewTab(url, BrowserEvents.OpenUrlInNewTab.Location.BACKGROUND));
-                }
-            },
-            new BrowserDialog.Item(R.string.dialog_open_incognito_tab, activity instanceof MainActivity) {
-                @Override
-                public void onClick() {
-                    mEventBus.post(new BrowserEvents.OpenUrlInNewTab(url, BrowserEvents.OpenUrlInNewTab.Location.INCOGNITO));
                 }
             },
             new BrowserDialog.Item(R.string.dialog_copy_link) {

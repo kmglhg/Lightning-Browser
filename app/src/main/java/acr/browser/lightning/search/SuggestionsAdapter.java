@@ -69,17 +69,14 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
     private final List<HistoryItem> mAllBookmarks = new ArrayList<>(5);
 
     private final boolean mDarkTheme;
-    private boolean mIsIncognito = true;
     @NonNull private final Context mContext;
     private PreferenceManager.Suggestion mSuggestionChoice;
 
-    public SuggestionsAdapter(@NonNull Context context, boolean dark, boolean incognito) {
+    public SuggestionsAdapter(@NonNull Context context, boolean dark) {
         super();
         BrowserApp.getAppComponent().inject(this);
         mContext = context;
-        mDarkTheme = dark || incognito;
-        mIsIncognito = incognito;
-
+        mDarkTheme = dark;
         refreshPreferences();
 
         refreshBookmarks();
@@ -319,7 +316,7 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
     }
 
     private boolean shouldRequestNetwork() {
-        return !mIsIncognito && mSuggestionChoice != PreferenceManager.Suggestion.SUGGESTION_NONE;
+        return mSuggestionChoice != PreferenceManager.Suggestion.SUGGESTION_NONE;
     }
 
     private static class SearchFilter extends Filter {

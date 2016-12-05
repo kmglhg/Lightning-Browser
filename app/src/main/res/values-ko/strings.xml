@@ -78,7 +78,6 @@
     <string name="hint_url">URL</string>
     <string name="title_edit_bookmark">즐겨찾기 편집</string>
     <string name="action_edit">편집</string>
-    <string name="action_incognito">새 사생활 보호 탭</string>
     <string name="action_homepage">기본값</string>
     <string name="action_back">뒤로</string>
     <string name="action_find">페이지에서 찾기</string>

@@ -16,8 +16,7 @@ public final class BrowserEvents {
 
         public enum Location {
             NEW_TAB,
-            BACKGROUND,
-            INCOGNITO
+            BACKGROUND
         }
 
         public final String url;

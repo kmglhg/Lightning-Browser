@@ -59,11 +59,6 @@ public class MainActivity extends BrowserActivity {
     }
 
     @Override
-    public boolean isIncognito() {
-        return false;
-    }
-
-    @Override
     public void closeActivity() {
         closeDrawers(new Runnable() {
             @Override
