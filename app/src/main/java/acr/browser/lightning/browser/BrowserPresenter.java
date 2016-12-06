@@ -168,12 +168,16 @@ public class BrowserPresenter {
         if (mTabsModel.size() == 1 && currentTab != null &&
             (UrlUtils.isSpecialUrl(currentTab.getUrl()) ||
                 currentTab.getUrl().equals(mPreferences.getHomepage()))) {
+            mView.closeActivity();
+            return;
+        } else if (mTabsModel.size() == 1 && currentTab != null &&
+                (!UrlUtils.isSpecialUrl(currentTab.getUrl()) &&
+                        !currentTab.getUrl().equals(mPreferences.getHomepage()))) {
             newTab(null, true);
             boolean currentDeleted = mTabsModel.deleteTab(0);
             if (currentDeleted) {
                 tabChanged(mTabsModel.indexOfCurrentTab());
             }
-//            mView.closeActivity();
             return;
         } else {
             if (isShown) {

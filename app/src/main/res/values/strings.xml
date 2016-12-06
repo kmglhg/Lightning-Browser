@@ -17,7 +17,7 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
-    <string name="app_name">Lightning</string>
+    <string name="app_name">MyBrowser</string>
     <string name="action_new_tab">New Tab</string>
     <string name="action_share">Share</string>
     <string name="action_history">History</string>
@@ -113,8 +113,6 @@
     <string name="title_flash">Adobe Flash</string>
     <string name="action_manual">Manual</string>
     <string name="action_auto">Auto</string>
-    <string name="action_follow_me">Contact Me</string>
-    <string name="url_twitter">twitter.com/RestainoAnthony</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="message_cache_cleared">Cache Cleared</string>
     <string name="message_import">Bookmarks Were Imported</string>
@@ -237,9 +235,6 @@
     <string name="action_get_all_images">Get All Images</string>
     <string name="action_delete_all_bookmarks">Delete all bookmarks</string>
 
-    <string name="faq">FAQ</string>
-    <string name="faq_description">Frequently Asked Questions</string>
-
     <!-- debug strings -->
     <string name="debug_title">Debug Settings</string>
     <string name="debug_leak_canary">LeakCanary</string>
@@ -257,4 +252,8 @@
     <string name="dialog_rename_folder">Rename folder</string>
     <string name="dialog_remove_folder">Remove folder</string>
     <string name="dialog_title_close_browser">Close browser</string>
+
+    <string name="dialog_paste_load">Paste and Load</string>
+    <string name="dialog_copy_url">Copy URL</string>
+    <string name="dialog_share_url">Share URL</string>
 </resources>

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
-    <string name="app_name">라이트닝</string>
+    <string name="app_name">내브라우저</string>
     <string name="action_new_tab">새 탭</string>
     <string name="action_share">공유</string>
     <string name="action_history">기록</string>
@@ -91,8 +91,6 @@
     <string name="title_flash">Adobe Flash</string>
     <string name="action_manual">수동</string>
     <string name="action_auto">자동</string>
-    <string name="action_follow_me">개발자에게 연락하기</string>
-    <string name="url_twitter">twitter.com/RestainoAnthony</string>
     <string name="clear_cache">캐시 지우기</string>
     <string name="message_cache_cleared">캐시를 지웠습니다</string>
     <string name="message_import">즐겨찾기를 가져왔습니다</string>
@@ -149,7 +147,7 @@
     <string name="settings_general">일반 설정</string>
     <string name="settings_display">디스플레이 설정</string>
     <string name="settings_privacy">사생활 설정</string>
-    <string name="settings_about">라이트닝에 대해서</string>
+    <string name="settings_about">내브라우저에 대해서</string>
     <string name="settings_about_explain">버전, 개발자, 라이센스에 대한 정보</string>
     <string name="close_tab">탭 닫기</string>
     <string name="close_all_tabs">모든 탭 닫기</string>
@@ -170,4 +168,8 @@
     <string name="invert_color">색상 반전</string>
     <string name="dark_theme">어두운 테마 사용</string>
     <string name="tabs">탭</string>
+
+    <string name="dialog_paste_load">붙여넣기 후 이동</string>
+    <string name="dialog_copy_url">URL 복사</string>
+    <string name="dialog_share_url">URL 공유</string>
 </resources>

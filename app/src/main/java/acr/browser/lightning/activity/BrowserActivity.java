@@ -1,7 +1,6 @@
 /*
  * Copyright 2015 Anthony Restaino
  */
-
 package acr.browser.lightning.activity;
 
 import android.app.Activity;
@@ -42,8 +41,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.JsonReader;
-import android.util.JsonToken;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -66,7 +63,6 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.webkit.WebIconDatabase;
@@ -90,23 +86,13 @@ import com.anthonycr.progress.AnimatedProgressBar;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -164,7 +150,6 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
     @Bind(R.id.toolbar_layout) ViewGroup mToolbarLayout;
     @Bind(R.id.progress_view) AnimatedProgressBar mProgressBar;
     @Bind(R.id.search_bar) RelativeLayout mSearchBar;
-
 
     // Toolbar Views
     @Bind(R.id.toolbar) Toolbar mToolbar;
@@ -301,7 +286,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
             }
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !mShowTabsInDrawer) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(Color.BLACK);
         }
 
@@ -394,11 +379,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         mSearch.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Log.d("TEST", "11111111111111111111");
-                Log.d("TEST", "11111111111111111111");
-                Log.d("TEST", "11111111111111111111");
-                Log.d("TEST", "11111111111111111111");
-                Log.d("TEST", "11111111111111111111");
+                showClipboardDialog();
                 return false;
             }
         });
@@ -429,6 +410,41 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         }
     }
 
+    public void showClipboardDialog() {
+        BrowserDialog.show(this,
+            new BrowserDialog.Item(R.string.dialog_paste_load) {
+                @Override
+                public void onClick() {
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    ClipData clip = clipboard.getPrimaryClip();
+                    mPresenter.loadUrlInCurrentView(clip.getItemAt(0).getText().toString());
+                }
+            },
+            new BrowserDialog.Item(R.string.dialog_copy_url) {
+                @Override
+                public void onClick() {
+                    String currentUrl = mTabsManager.getCurrentTab() != null ? mTabsManager.getCurrentTab().getUrl() : null;
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("label", currentUrl);
+                    clipboard.setPrimaryClip(clip);
+                }
+            },
+            new BrowserDialog.Item(R.string.dialog_share_url) {
+                @Override
+                public void onClick() {
+                    String currentUrl = mTabsManager.getCurrentTab() != null ? mTabsManager.getCurrentTab().getUrl() : null;
+
+                    if (currentUrl != null && !UrlUtils.isSpecialUrl(currentUrl)) {
+                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                        shareIntent.setType("text/plain");
+                        shareIntent.putExtra(Intent.EXTRA_SUBJECT, mTabsManager.getCurrentTab().getWebView().getTitle());
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, currentUrl);
+                        startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.dialog_title_share)));
+                    }
+                }
+            }
+        );
+    }
     @IdRes
     private int getBookmarksFragmentViewId() {
         return mSwapBookmarksAndTabs ? R.id.left_drawer : R.id.right_drawer;
@@ -681,20 +697,9 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
             && (Build.MANUFACTURER.compareTo("LGE") == 0)) {
             // Workaround for stupid LG devices that crash
             return true;
-        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-            mKeyDownStartTime = System.currentTimeMillis();
-            Handlers.MAIN.postDelayed(mLongPressBackRunnable, ViewConfiguration.getLongPressTimeout());
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    private final Runnable mLongPressBackRunnable = new Runnable() {
-        @Override
-        public void run() {
-            final LightningView currentTab = mTabsManager.getCurrentTab();
-            showCloseDialog(mTabsManager.positionOf(currentTab));
-        }
-    };
 
     @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
@@ -704,11 +709,6 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
             // Workaround for stupid LG devices that crash
             openOptionsMenu();
             return true;
-        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Handlers.MAIN.removeCallbacks(mLongPressBackRunnable);
-            if ((System.currentTimeMillis() - mKeyDownStartTime) > ViewConfiguration.getLongPressTimeout()) {
-                return true;
-            }
         }
         return super.onKeyUp(keyCode, event);
     }
@@ -907,32 +907,6 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
     @Override
     public TabsManager getTabModel() {
         return mTabsManager;
-    }
-
-    @Override
-    public void showCloseDialog(final int position) {
-        if (position < 0) {
-            return;
-        }
-        BrowserDialog.show(this, R.string.dialog_title_close_browser,
-            new BrowserDialog.Item(R.string.close_tab) {
-                @Override
-                public void onClick() {
-                    mPresenter.deleteTab(position);
-                }
-            },
-            new BrowserDialog.Item(R.string.close_other_tabs) {
-                @Override
-                public void onClick() {
-                    mPresenter.closeAllOtherTabs();
-                }
-            },
-            new BrowserDialog.Item(R.string.close_all_tabs) {
-                @Override
-                public void onClick() {
-                    closeBrowser();
-                }
-            });
     }
 
     @Override
@@ -1234,6 +1208,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
 
     @Override
     public synchronized void onBackPressed() {
+
         final LightningView currentTab = mTabsManager.getCurrentTab();
         if (mDrawerLayout.isDrawerOpen(getTabDrawer())) {
             mDrawerLayout.closeDrawer(getTabDrawer());
@@ -1241,6 +1216,10 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
             mBookmarksView.navigateBack();
         } else {
             if (currentTab != null) {
+                if (mTabsManager.size() == 1 && (UrlUtils.isSpecialUrl(currentTab.getUrl()) || currentTab.getUrl().equals(mPreferences.getHomepage()))) {
+                    closeBrowser();
+                }
+
                 Log.d(TAG, "onBackPressed");
                 if (mSearch.hasFocus()) {
                     currentTab.requestFocus();

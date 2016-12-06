@@ -116,6 +116,8 @@ public class BrowserDialog {
 
         if (!TextUtils.isEmpty(title)) {
             titleView.setText(title);
+        } else {
+            titleView.setVisibility(View.GONE);
         }
 
         listView.setAdapter(adapter);
