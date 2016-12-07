@@ -61,8 +61,6 @@ public class BookmarksFragment extends Fragment implements View.OnClickListener,
 
     private final static String TAG = BookmarksFragment.class.getSimpleName();
 
-    public final static String INCOGNITO_MODE = TAG + ".INCOGNITO_MODE";
-
     // Managers
     @Inject BookmarkManager mBookmarkManager;
 
@@ -94,8 +92,6 @@ public class BookmarksFragment extends Fragment implements View.OnClickListener,
     // Colors
     private int mIconColor, mScrollIndex;
 
-    private boolean mIsIncognito;
-
     private Observable<BookmarkViewAdapter> initBookmarkManager() {
         return Observable.create(new Action<BookmarkViewAdapter>() {
             @Override
@@ -119,8 +115,7 @@ public class BookmarksFragment extends Fragment implements View.OnClickListener,
         final Context context = getContext();
         mUiController = (UIController) context;
         mTabsManager = mUiController.getTabModel();
-        mIsIncognito = arguments.getBoolean(INCOGNITO_MODE, false);
-        boolean darkTheme = mPreferenceManager.getUseTheme() != 0 || mIsIncognito;
+        boolean darkTheme = mPreferenceManager.getUseTheme() != 0;
         mWebpageBitmap = ThemeUtils.getThemedBitmap(context, R.drawable.ic_webpage, darkTheme);
         mFolderBitmap = ThemeUtils.getThemedBitmap(context, R.drawable.ic_folder, darkTheme);
         mIconColor = darkTheme ? ThemeUtils.getIconDarkThemeColor(context) :
@@ -218,7 +213,7 @@ public class BookmarksFragment extends Fragment implements View.OnClickListener,
         if (activity == null) {
             return;
         }
-        boolean darkTheme = mPreferenceManager.getUseTheme() != 0 || mIsIncognito;
+        boolean darkTheme = mPreferenceManager.getUseTheme() != 0;
         mWebpageBitmap = ThemeUtils.getThemedBitmap(activity, R.drawable.ic_webpage, darkTheme);
         mFolderBitmap = ThemeUtils.getThemedBitmap(activity, R.drawable.ic_folder, darkTheme);
         mIconColor = darkTheme ? ThemeUtils.getIconDarkThemeColor(activity) :

@@ -52,7 +52,6 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
@@ -185,7 +184,6 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
     private int mIconColor;
     private int mDisabledIconColor;
     private int mCurrentUiColor = Color.BLACK;
-    private long mKeyDownStartTime;
     private String mSearchText;
     private String mUntitledTitle;
     private String mCameraPhotoPath;
@@ -408,6 +406,46 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
             setIntent(null);
             mProxyUtils.checkForProxy(this);
         }
+
+        setupBottomButton(R.id.home_action_back, R.id.home_icon_back);
+        setupBottomButton(R.id.home_action_forward, R.id.home_icon_forward);
+        setupBottomButton(R.id.home_action_home, R.id.home_icon_home);
+        setupBottomButton(R.id.home_new_tab_button, R.id.home_icon_plus);
+        setupBottomButton(R.id.home_action_delete, R.id.home_icon_delete);
+    }
+
+    private void setupBottomButton(@IdRes final int buttonId, @IdRes final int imageId) {
+        final View frameButton = findViewById(buttonId);
+        final ImageView buttonImage = (ImageView) findViewById(imageId);
+        frameButton.setOnClickListener(this);
+        frameButton.setOnLongClickListener(this);
+        buttonImage.setColorFilter(mIconColor, PorterDuff.Mode.SRC_IN);
+    }
+
+    @Override
+    public void showCloseDialog(final int position) {
+        if (position < 0) {
+            return;
+        }
+        BrowserDialog.show(this, R.string.dialog_title_close_browser,
+            new BrowserDialog.Item(R.string.close_tab) {
+                @Override
+                public void onClick() {
+                    mPresenter.deleteTab(position);
+                }
+            },
+            new BrowserDialog.Item(R.string.close_other_tabs) {
+                @Override
+                public void onClick() {
+                    mPresenter.closeAllOtherTabs();
+                }
+            },
+            new BrowserDialog.Item(R.string.close_all_tabs) {
+                @Override
+                public void onClick() {
+                    closeBrowser();
+                }
+            });
     }
 
     public void showClipboardDialog() {
@@ -956,17 +994,19 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         mDrawerHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mDrawerLayout.closeDrawers();
+//                mDrawerLayout.closeDrawers();
             }
         }, 200);
 
     }
 
     @Override
-    public void setTabView(@NonNull final View view) {
+    public void setTabView(@NonNull final View view, @NonNull Boolean isNewTab) {
         if (mCurrentView == view) {
             return;
         }
+
+        final Boolean isNewTabFinal = isNewTab;
 
         Log.d(TAG, "Setting the tab view");
 
@@ -995,7 +1035,9 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         mDrawerHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mDrawerLayout.closeDrawers();
+                if (!isNewTabFinal) {
+                    mDrawerLayout.closeDrawers();
+                }
             }
         }, 200);
 
@@ -2105,6 +2147,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
      */
     @Override
     public void onClick(View v) {
+
         final LightningView currentTab = mTabsManager.getCurrentTab();
         if (currentTab == null) {
             return;
@@ -2139,6 +2182,25 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                 currentTab.reload();
                 closeDrawers(null);
                 break;
+            case R.id.home_new_tab_button:
+                newTab(null, true);
+                break;
+            case R.id.home_action_back:
+                if (currentTab != null && currentTab.canGoBack()) {
+                    currentTab.goBack();
+                }
+                break;
+            case R.id.home_action_forward:
+                if (currentTab != null && currentTab.canGoForward()) {
+                    currentTab.goForward();
+                }
+                break;
+            case R.id.home_action_home:
+                currentTab.loadHomepage();
+                break;
+            case R.id.home_action_delete:
+                mPresenter.deleteTab(mTabsManager.positionOf(currentTab));
+                break;
         }
     }
 
@@ -2154,6 +2216,16 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
      */
     @Override
     public boolean onLongClick(View view) {
+
+        final LightningView currentTab = mTabsManager.getCurrentTab();
+        if (currentTab == null) {
+            return true;
+        }
+        switch (view.getId()) {
+            case R.id.home_new_tab_button:
+                new HistoryPage(currentTab, getApplication(), mHistoryDatabase).load();
+                break;
+        }
         return true;
     }
 

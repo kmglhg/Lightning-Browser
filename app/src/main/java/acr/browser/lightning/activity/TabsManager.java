@@ -547,5 +547,4 @@ public class TabsManager {
             return tab;
         }
     }
-
 }

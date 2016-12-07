@@ -61,6 +61,8 @@
         <!-- Alert dialogs -->
         <item name="alertDialogTheme">@style/AppCompatDialogStyle.Light</item>
 
+        <item name="android:actionBarSize">32dp</item>
+        <item name="actionBarSize">32dp</item>
     </style>
 
     <style name="Theme.BaseDarkTheme" parent="Theme.AppCompat">
@@ -83,6 +85,9 @@
 
         <!-- Alert dialogs -->
         <item name="alertDialogTheme">@style/AppCompatDialogStyle.Dark</item>
+
+        <item name="android:actionBarSize">32dp</item>
+        <item name="actionBarSize">32dp</item>
     </style>
 
     <style name="Theme.BaseBlackTheme" parent="Theme.AppCompat">
@@ -105,6 +110,9 @@
 
         <!-- Alert dialogs -->
         <item name="alertDialogTheme">@style/AppCompatDialogStyle.Black</item>
+
+        <item name="android:actionBarSize">32dp</item>
+        <item name="actionBarSize">32dp</item>
     </style>
 
     <!-- AlertDialog Theming -->

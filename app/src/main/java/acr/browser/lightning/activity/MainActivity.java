@@ -17,9 +17,6 @@ import com.anthonycr.bonsai.Subscriber;
 public class MainActivity extends BrowserActivity {
 
     @Override
-    public void showCloseDialog(int position) {}
-
-    @Override
     public Observable<Void> updateCookiePreference() {
         return Observable.create(new Action<Void>() {
             @Override

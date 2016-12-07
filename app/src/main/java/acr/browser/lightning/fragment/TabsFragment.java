@@ -65,9 +65,8 @@ public class TabsFragment extends Fragment implements View.OnClickListener, View
      * If true, the fragment is in the left drawner in the strip otherwise.
      */
     public static final String VERTICAL_MODE = TAG + ".VERTICAL_MODE";
-    public static final String IS_INCOGNITO = TAG + ".IS_INCOGNITO";
 
-    private boolean mIsIncognito, mDarkTheme;
+    private boolean mDarkTheme;
     private int mIconColor;
     private boolean mColorMode = true;
     private boolean mShowInNavigationDrawer;
@@ -91,9 +90,8 @@ public class TabsFragment extends Fragment implements View.OnClickListener, View
         final Context context = getContext();
         mUiController = (UIController) getActivity();
         mTabsManager = mUiController.getTabModel();
-        mIsIncognito = arguments.getBoolean(IS_INCOGNITO, false);
         mShowInNavigationDrawer = arguments.getBoolean(VERTICAL_MODE, true);
-        mDarkTheme = mPreferences.getUseTheme() != 0 || mIsIncognito;
+        mDarkTheme = mPreferences.getUseTheme() != 0;
         mColorMode = mPreferences.getColorModeEnabled();
         mColorMode &= !mDarkTheme;
         mIconColor = mDarkTheme ?
@@ -202,7 +200,7 @@ public class TabsFragment extends Fragment implements View.OnClickListener, View
         if (activity == null) {
             return;
         }
-        mDarkTheme = mPreferences.getUseTheme() != 0 || mIsIncognito;
+        mDarkTheme = mPreferences.getUseTheme() != 0;
         mColorMode = mPreferences.getColorModeEnabled();
         mColorMode &= !mDarkTheme;
         mIconColor = mDarkTheme ?
@@ -333,11 +331,11 @@ public class TabsFragment extends Fragment implements View.OnClickListener, View
                 Drawable foregroundDrawable = null;
                 if (!mDrawerTabs) {
                     foregroundDrawable = new BitmapDrawable(getResources(), mForegroundTabBitmap);
-                    if (!mIsIncognito && mColorMode) {
+                    if (mColorMode) {
                         foregroundDrawable.setColorFilter(mUiController.getUiColor(), PorterDuff.Mode.SRC_IN);
                     }
                 }
-                if (!mIsIncognito && mColorMode) {
+                if (mColorMode) {
                     mUiController.changeToolbarBackground(favicon, foregroundDrawable);
                 }
 

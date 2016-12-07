@@ -7,7 +7,7 @@ import android.view.View;
 
 public interface BrowserView {
 
-    void setTabView(@NonNull View view);
+    void setTabView(@NonNull View view, @NonNull Boolean isNewTab);
 
     void removeTabView();
 

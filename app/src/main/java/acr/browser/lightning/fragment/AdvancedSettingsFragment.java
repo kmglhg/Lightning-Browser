@@ -23,14 +23,13 @@ public class AdvancedSettingsFragment extends LightningPreferenceFragment implem
 
     private static final String SETTINGS_NEWWINDOW = "allow_new_window";
     private static final String SETTINGS_ENABLECOOKIES = "allow_cookies";
-    private static final String SETTINGS_COOKIESINKOGNITO = "incognito_cookies";
     private static final String SETTINGS_RESTORETABS = "restore_tabs";
     private static final String SETTINGS_RENDERINGMODE = "rendering_mode";
     private static final String SETTINGS_URLCONTENT = "url_contents";
     private static final String SETTINGS_TEXTENCODING = "text_encoding";
 
     private Activity mActivity;
-    private CheckBoxPreference cbAllowPopups, cbenablecookies, cbcookiesInkognito, cbrestoreTabs;
+    private CheckBoxPreference cbAllowPopups, cbenablecookies, cbrestoreTabs;
     private Preference renderingmode, urlcontent, textEncoding;
     private CharSequence[] mUrlOptions;
 
@@ -52,7 +51,6 @@ public class AdvancedSettingsFragment extends LightningPreferenceFragment implem
         urlcontent = findPreference(SETTINGS_URLCONTENT);
         cbAllowPopups = (CheckBoxPreference) findPreference(SETTINGS_NEWWINDOW);
         cbenablecookies = (CheckBoxPreference) findPreference(SETTINGS_ENABLECOOKIES);
-        cbcookiesInkognito = (CheckBoxPreference) findPreference(SETTINGS_COOKIESINKOGNITO);
         cbrestoreTabs = (CheckBoxPreference) findPreference(SETTINGS_RESTORETABS);
 
         renderingmode.setOnPreferenceClickListener(this);
@@ -60,7 +58,6 @@ public class AdvancedSettingsFragment extends LightningPreferenceFragment implem
         urlcontent.setOnPreferenceClickListener(this);
         cbAllowPopups.setOnPreferenceChangeListener(this);
         cbenablecookies.setOnPreferenceChangeListener(this);
-        cbcookiesInkognito.setOnPreferenceChangeListener(this);
         cbrestoreTabs.setOnPreferenceChangeListener(this);
 
         switch (mPreferenceManager.getRenderingMode()) {
@@ -89,7 +86,6 @@ public class AdvancedSettingsFragment extends LightningPreferenceFragment implem
 
         cbAllowPopups.setChecked(mPreferenceManager.getPopupsEnabled());
         cbenablecookies.setChecked(mPreferenceManager.getCookiesEnabled());
-        cbcookiesInkognito.setChecked(mPreferenceManager.getIncognitoCookiesEnabled());
         cbrestoreTabs.setChecked(mPreferenceManager.getRestoreLostTabsEnabled());
     }
 
@@ -121,10 +117,6 @@ public class AdvancedSettingsFragment extends LightningPreferenceFragment implem
             case SETTINGS_ENABLECOOKIES:
                 mPreferenceManager.setCookiesEnabled((Boolean) newValue);
                 cbenablecookies.setChecked((Boolean) newValue);
-                return true;
-            case SETTINGS_COOKIESINKOGNITO:
-                mPreferenceManager.setIncognitoCookiesEnabled((Boolean) newValue);
-                cbcookiesInkognito.setChecked((Boolean) newValue);
                 return true;
             case SETTINGS_RESTORETABS:
                 mPreferenceManager.setRestoreLostTabsEnabled((Boolean) newValue);

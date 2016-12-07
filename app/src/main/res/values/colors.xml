@@ -25,7 +25,7 @@
     <color name="divider_light">#1F000000</color>
 
 
-    <color name="selected_dark">#0FFFFFFF</color>
+    <color name="selected_dark">#2fFFFFFF</color>
     <color name="selected_light">#0F000000</color>
 
     <color name="transparent">#00000000</color>

@@ -86,7 +86,7 @@ public class BrowserPresenter {
         mView.notifyTabViewChanged(mTabsModel.indexOfTab(tab));
     }
 
-    private void onTabChanged(@Nullable LightningView newTab) {
+    private void onTabChanged(@Nullable LightningView newTab, @NonNull Boolean isNewTab) {
         Log.d(TAG, "On tab changed");
         if (newTab == null) {
             mView.removeTabView();
@@ -117,7 +117,7 @@ public class BrowserPresenter {
                 mView.setBackButtonEnabled(newTab.canGoBack());
                 mView.setForwardButtonEnabled(newTab.canGoForward());
                 mView.updateUrl(newTab.getUrl(), true);
-                mView.setTabView(newTab.getWebView());
+                mView.setTabView(newTab.getWebView(), isNewTab);
                 int index = mTabsModel.indexOfTab(newTab);
                 if (index >= 0) {
                     mView.notifyTabViewChanged(mTabsModel.indexOfTab(newTab));
@@ -291,7 +291,7 @@ public class BrowserPresenter {
      * we don't leak any memory.
      */
     public void shutdown() {
-        onTabChanged(null);
+        onTabChanged(null, false);
         mTabsModel.setTabNumberChangedListener(null);
         mTabsModel.cancelPendingWork();
     }
@@ -312,7 +312,7 @@ public class BrowserPresenter {
             return;
         }
         LightningView tab = mTabsModel.switchToTab(position);
-        onTabChanged(tab);
+        onTabChanged(tab, false);
     }
 
     /**
@@ -345,7 +345,7 @@ public class BrowserPresenter {
 
         if (show) {
             LightningView tab = mTabsModel.switchToTab(mTabsModel.last());
-            onTabChanged(tab);
+            onTabChanged(tab, true);
         }
 
         mView.updateTabNumber(mTabsModel.size());

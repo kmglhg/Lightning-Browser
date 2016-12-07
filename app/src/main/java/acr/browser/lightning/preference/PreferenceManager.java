@@ -24,7 +24,6 @@ public class PreferenceManager {
         static final String FULL_SCREEN = "fullscreen";
         static final String HIDE_STATUS_BAR = "hidestatus";
         static final String HOMEPAGE = "home";
-        static final String INCOGNITO_COOKIES = "incognitocookies";
         static final String JAVASCRIPT = "java";
         static final String LOCATION = "location";
         static final String OVERVIEW_MODE = "overviewmode";
@@ -167,10 +166,6 @@ public class PreferenceManager {
         return mPrefs.getString(Name.HOMEPAGE, Constants.SCHEME_HOMEPAGE);
     }
 
-    public boolean getIncognitoCookiesEnabled() {
-        return mPrefs.getBoolean(Name.INCOGNITO_COOKIES, false);
-    }
-
     public boolean getInvertColors() {
         return mPrefs.getBoolean(Name.INVERT_COLORS, false);
     }
@@ -243,7 +238,7 @@ public class PreferenceManager {
     }
 
     public int getUseTheme() {
-        return mPrefs.getInt(Name.THEME, 0);
+        return mPrefs.getInt(Name.THEME, 2);
     }
 
     public boolean getUseProxy() {
@@ -384,10 +379,6 @@ public class PreferenceManager {
 
     public void setHomepage(@NonNull String homepage) {
         putString(Name.HOMEPAGE, homepage);
-    }
-
-    public void setIncognitoCookiesEnabled(boolean enable) {
-        putBoolean(Name.INCOGNITO_COOKIES, enable);
     }
 
     public void setInvertColors(boolean enable) {
