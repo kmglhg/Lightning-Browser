@@ -1258,7 +1258,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
             mBookmarksView.navigateBack();
         } else {
             if (currentTab != null) {
-                if (mTabsManager.size() == 1 && (UrlUtils.isSpecialUrl(currentTab.getUrl()) || currentTab.getUrl().equals(mPreferences.getHomepage()))) {
+                if (mTabsManager.size() == 1 && (UrlUtils.isSpecialUrl(currentTab.getUrl()) || currentTab.getUrl().equals(mPreferences.getHomepage())) && !currentTab.canGoBack()) {
                     closeBrowser();
                 }
 

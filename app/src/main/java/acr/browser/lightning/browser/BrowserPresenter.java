@@ -165,14 +165,10 @@ public class BrowserPresenter {
         boolean shouldClose = mShouldClose && isShown && Boolean.TRUE.equals(tabToDelete.getTag());
         final LightningView currentTab = mTabsModel.getCurrentTab();
 
-        if (mTabsModel.size() == 1 && currentTab != null &&
-            (UrlUtils.isSpecialUrl(currentTab.getUrl()) ||
-                currentTab.getUrl().equals(mPreferences.getHomepage()))) {
+        if (mTabsModel.size() == 1 && currentTab != null && (UrlUtils.isSpecialUrl(currentTab.getUrl()) || currentTab.getUrl().equals(mPreferences.getHomepage())) && !currentTab.canGoBack()) {
             mView.closeActivity();
             return;
-        } else if (mTabsModel.size() == 1 && currentTab != null &&
-                (!UrlUtils.isSpecialUrl(currentTab.getUrl()) &&
-                        !currentTab.getUrl().equals(mPreferences.getHomepage()))) {
+        } else if (mTabsModel.size() == 1 && currentTab != null && (!UrlUtils.isSpecialUrl(currentTab.getUrl()) && !currentTab.getUrl().equals(mPreferences.getHomepage()))) {
             newTab(null, true);
             boolean currentDeleted = mTabsModel.deleteTab(0);
             if (currentDeleted) {
@@ -243,6 +239,7 @@ public class BrowserPresenter {
                 if (num == 1) {
                     loadUrlInCurrentView(url);
                 } else if (url != null) {
+
                     if (url.startsWith(Constants.FILE)) {
                         mView.showBlockedLocalFileDialog(new DialogInterface.OnClickListener() {
                             @Override
