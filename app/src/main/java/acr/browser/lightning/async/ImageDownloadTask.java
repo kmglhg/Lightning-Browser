@@ -138,10 +138,12 @@ public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
+
         super.onPostExecute(bitmap);
         AsyncExecutor.getInstance().notifyThreadFinish();
         final Bitmap fav = Utils.padFavicon(bitmap);
         final ImageView view = mFaviconImage.get();
+
         if (view != null && view.getTag().equals(mWeb.getUrl().hashCode())) {
             Schedulers.main().execute(new Runnable() {
                 @Override
@@ -152,5 +154,4 @@ public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap> {
         }
         mWeb.setBitmap(fav);
     }
-
 }
