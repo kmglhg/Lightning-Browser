@@ -23,6 +23,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,11 @@ import com.squareup.otto.Bus;
 import javax.inject.Inject;
 
 import acr.browser.lightning.R;
+import acr.browser.lightning.activity.BrowserActivity;
 import acr.browser.lightning.activity.TabsManager;
 import acr.browser.lightning.app.BrowserApp;
+import acr.browser.lightning.browser.BrowserPresenter;
+import acr.browser.lightning.browser.BrowserView;
 import acr.browser.lightning.browser.TabsView;
 import acr.browser.lightning.controller.UIController;
 import acr.browser.lightning.fragment.anim.HorizontalItemAnimator;
@@ -75,12 +79,21 @@ public class TabsFragment extends Fragment implements View.OnClickListener, View
     private UIController mUiController;
     private RecyclerView mRecyclerView;
 
+//    private BrowserPresenter mPresenter;
+    private BrowserActivity browserActivity;
+
     private TabsManager mTabsManager;
     @Inject Bus mBus;
     @Inject PreferenceManager mPreferences;
 
     public TabsFragment() {
         BrowserApp.getAppComponent().inject(this);
+    }
+
+//    public void setBrowserActivity(BrowserPresenter mPresenter) {
+//        this.mPresenter = mPresenter;
+    public void setBrowserActivity(BrowserActivity browserActivity) {
+        this.browserActivity = browserActivity;
     }
 
     @Override
@@ -109,9 +122,9 @@ public class TabsFragment extends Fragment implements View.OnClickListener, View
             layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
             setupFrameLayoutButton(view, R.id.tab_header_button, R.id.plusIcon);
             setupFrameLayoutButton(view, R.id.new_tab_button, R.id.icon_plus);
-            setupFrameLayoutButton(view, R.id.action_back, R.id.icon_back);
-            setupFrameLayoutButton(view, R.id.action_forward, R.id.icon_forward);
-            setupFrameLayoutButton(view, R.id.action_home, R.id.icon_home);
+            setupFrameLayoutButton(view, R.id.action_delete, R.id.icon_delete);
+            setupFrameLayoutButton(view, R.id.action_remove_other_tabs, R.id.icon_remove_other_tabs);
+            setupFrameLayoutButton(view, R.id.action_remove_all_tabs, R.id.icon_remove_all_tabs);
         } else {
             view = inflater.inflate(R.layout.tab_strip, container, false);
             layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -220,15 +233,14 @@ public class TabsFragment extends Fragment implements View.OnClickListener, View
             case R.id.new_tab_button:
                 mUiController.newTabButtonClicked();
                 break;
-            case R.id.action_back:
-                mUiController.onBackButtonPressed();
+            case R.id.action_delete:
+                mUiController.tabCloseClicked(getTabsManager().indexOfCurrentTab());
                 break;
-            case R.id.action_forward:
-                mUiController.onForwardButtonPressed();
+            case R.id.action_remove_all_tabs:
+                browserActivity.closeBrowser();
                 break;
-            case R.id.action_home:
-                mUiController.onHomeButtonPressed();
-            default:
+            case R.id.action_remove_other_tabs:
+                browserActivity.closeAllOtherTabs();
                 break;
         }
     }

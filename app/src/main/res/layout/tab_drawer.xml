@@ -61,7 +61,7 @@
         android:weightSum="4">
 
         <FrameLayout
-            android:id="@+id/action_back"
+            android:id="@+id/action_remove_all_tabs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -69,16 +69,15 @@
             android:clickable="true">
 
             <ImageView
-                android:id="@+id/icon_back"
+                android:id="@+id/icon_remove_all_tabs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:contentDescription="@string/action_back"
-                app:srcCompat="@drawable/ic_action_back"/>
+                app:srcCompat="@drawable/ic_action_remove_all_tabs"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/action_home"
+            android:id="@+id/action_remove_other_tabs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -86,16 +85,15 @@
             android:clickable="true">
 
             <ImageView
-                android:id="@+id/icon_home"
+                android:id="@+id/icon_remove_other_tabs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:contentDescription="@string/action_homepage"
-                app:srcCompat="@drawable/ic_action_home"/>
+                app:srcCompat="@drawable/ic_action_remove_other_tabs"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/action_forward"
+            android:id="@+id/action_delete"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -103,12 +101,11 @@
             android:clickable="true">
 
             <ImageView
-                android:id="@+id/icon_forward"
+                android:id="@+id/icon_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:contentDescription="@string/action_forward"
-                app:srcCompat="@drawable/ic_action_forward"/>
+                app:srcCompat="@drawable/ic_action_delete"/>
         </FrameLayout>
 
         <FrameLayout

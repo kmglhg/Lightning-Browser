@@ -294,6 +294,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         mWebpageBitmap = ThemeUtils.getThemedBitmap(this, R.drawable.ic_webpage, mDarkTheme);
 
         final TabsFragment tabsFragment = new TabsFragment();
+        tabsFragment.setBrowserActivity(this);
         mTabsView = tabsFragment;
         final Bundle tabsFragmentArguments = new Bundle();
         tabsFragmentArguments.putBoolean(TabsFragment.VERTICAL_MODE, mShowTabsInDrawer);
@@ -437,7 +438,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
             new BrowserDialog.Item(R.string.close_other_tabs) {
                 @Override
                 public void onClick() {
-                    mPresenter.closeAllOtherTabs();
+                    closeAllOtherTabs();
                 }
             },
             new BrowserDialog.Item(R.string.close_all_tabs) {
@@ -1233,6 +1234,10 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
 
             }
         });
+    }
+
+    public void closeAllOtherTabs() {
+        mPresenter.closeAllOtherTabs();
     }
 
     public void closeBrowser() {
