@@ -123,4 +123,7 @@ public class HistoryPage extends AsyncTask<Void, Void, Void> {
         }
     }
 
+    public static void deleteHistoryDatabase(HistoryDatabase database) {
+        database.deleteHistory();
+    }
 }

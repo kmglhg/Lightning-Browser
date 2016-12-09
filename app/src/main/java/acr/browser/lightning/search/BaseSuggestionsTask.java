@@ -34,7 +34,7 @@ abstract class BaseSuggestionsTask {
 
     static final int MAX_RESULTS = 5;
     private static final long INTERVAL_DAY = TimeUnit.DAYS.toMillis(1);
-    private static final String DEFAULT_LANGUAGE = "en";
+    private static final String DEFAULT_LANGUAGE = "kr";
     @Nullable private static String sLanguage;
     @NonNull private final SuggestionsResult mResultCallback;
     @NonNull private final Application mApplication;

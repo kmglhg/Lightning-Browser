@@ -456,7 +456,9 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                 public void onClick() {
                     ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                     ClipData clip = clipboard.getPrimaryClip();
-                    mPresenter.loadUrlInCurrentView(clip.getItemAt(0).getText().toString());
+                    if (clip != null && clip.getItemAt(0) != null) {
+                        mPresenter.loadUrlInCurrentView(clip.getItemAt(0).getText().toString());
+                    }
                 }
             },
             new BrowserDialog.Item(R.string.dialog_copy_url) {
@@ -2228,7 +2230,16 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
         }
         switch (view.getId()) {
             case R.id.home_new_tab_button:
+                if (mHistoryDatabase.getAllHistoryItems() != null && mHistoryDatabase.getAllHistoryItems().size() > 0) {
+                    newTab(mHistoryDatabase.getAllHistoryItems().get(0).getUrl(), true);
+                }
+                break;
+            case R.id.home_action_home:
                 new HistoryPage(currentTab, getApplication(), mHistoryDatabase).load();
+                break;
+            case R.id.home_action_delete:
+                HistoryPage.deleteHistoryDatabase(mHistoryDatabase);
+                closeBrowser();
                 break;
         }
         return true;
