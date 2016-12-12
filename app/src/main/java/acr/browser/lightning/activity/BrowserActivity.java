@@ -707,12 +707,18 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
             case 0:
                 mSearchText = mPreferences.getSearchUrl();
                 if (!mSearchText.startsWith(Constants.HTTP)
-                    && !mSearchText.startsWith(Constants.HTTPS)) {
+                        && !mSearchText.startsWith(Constants.HTTPS)) {
                     mSearchText = Constants.GOOGLE_SEARCH;
                 }
                 break;
             case 1:
                 mSearchText = Constants.GOOGLE_SEARCH;
+                break;
+            case 2:
+                mSearchText = Constants.NAVER_SEARCH;
+                break;
+            case 3:
+                mSearchText = Constants.WIKIPEDIA_SEARCH;
                 break;
         }
 
@@ -1384,11 +1390,14 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
      * checks if it is a search, url, etc.
      */
     private void searchTheWeb(@NonNull String query) {
+
         final LightningView currentTab = mTabsManager.getCurrentTab();
+
         if (query.isEmpty()) {
             return;
         }
         String searchUrl = mSearchText + UrlUtils.QUERY_PLACE_HOLDER;
+
         query = query.trim();
         if (currentTab != null) {
             currentTab.stopLoading();
@@ -2238,7 +2247,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                 new HistoryPage(currentTab, getApplication(), mHistoryDatabase).load();
                 break;
             case R.id.home_action_delete:
-                HistoryPage.deleteHistoryDatabase(mHistoryDatabase);
+                mHistoryDatabase.deleteHistory();
                 closeBrowser();
                 break;
         }

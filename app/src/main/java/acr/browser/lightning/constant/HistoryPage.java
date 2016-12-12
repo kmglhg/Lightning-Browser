@@ -122,8 +122,4 @@ public class HistoryPage extends AsyncTask<Void, Void, Void> {
             historyWebPage.delete();
         }
     }
-
-    public static void deleteHistoryDatabase(HistoryDatabase database) {
-        database.deleteHistory();
-    }
 }

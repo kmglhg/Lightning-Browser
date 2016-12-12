@@ -84,20 +84,22 @@ public class GalleryActivity extends Activity {
         gridView.setAdapter(gridAdapter);
 
         Button downloadBtn = (Button) findViewById(R.id.downloadBtn);
+
         downloadBtn.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                downloadPath = DownloadHandler.DEFAULT_DOWNLOAD_PATH + "/" + path;
-
                 new Timer().schedule(new TimerTask() {
                     public void run() {
+                        String tmpDownloadPath = mPreferenceManager.getDownloadDirectory();
+                        mPreferenceManager.setDownloadDirectory(DownloadHandler.DEFAULT_DOWNLOAD_PATH + "/" + path);
+
                         if (selectedImageItems != null && selectedImageItems.size() > 0) {
                             for (String uri : selectedImageItems) {
                                 mPreferenceManager.setDownloadDirectory(downloadPath);
                                 Utils.downloadFile(GalleryActivity.this, mPreferenceManager, uri, userAgent, "attachment");
                             }
                         }
+                        mPreferenceManager.setDownloadDirectory(tmpDownloadPath);
                     }
                 }, 300);
             }

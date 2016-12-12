@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import acr.browser.lightning.R;
 import acr.browser.lightning.app.BrowserApp;
+import acr.browser.lightning.database.BookmarkManager;
 import acr.browser.lightning.preference.PreferenceManager;
 import acr.browser.lightning.utils.Utils;
 import acr.browser.lightning.view.LightningView;
@@ -34,7 +35,7 @@ public class StartPage extends AsyncTask<Void, Void, Void> {
 
     private static final String HEAD_2 = "</title>"
             + "</head>"
-            + "<style>body{background:#f5f5f5;text-align:center;margin:0px;}#search_input{height:35px; "
+            + "<style>body{background:#424242;text-align:center;margin:0px;}#search_input{height:35px; "
             + "width:100%;outline:none;border:none;font-size: 16px;background-color:transparent;}"
             + "span { display: block; overflow: hidden; padding-left:5px;vertical-align:middle;}"
             + ".search_bar{display:table;vertical-align:middle;width:90%;height:35px;max-width:500px;margin:0 auto;background-color:#fff;box-shadow: 0px 2px 3px rgba( 0, 0, 0, 0.25 );"
@@ -58,6 +59,7 @@ public class StartPage extends AsyncTask<Void, Void, Void> {
     @NonNull private final Application mApp;
     @NonNull private final WeakReference<LightningView> mTabReference;
 
+    @Inject BookmarkManager mBookmarkManager;
     @Inject PreferenceManager mPreferenceManager;
 
     private String mStartpageUrl;
