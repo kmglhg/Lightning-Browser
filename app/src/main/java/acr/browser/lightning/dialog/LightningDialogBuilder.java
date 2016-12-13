@@ -255,7 +255,7 @@ public class LightningDialogBuilder {
             new BrowserDialog.Item(R.string.dialog_download_image) {
                 @Override
                 public void onClick() {
-                    Utils.downloadFile(activity, mPreferenceManager, url, userAgent, "attachment");
+                    Utils.downloadFile(activity, mPreferenceManager, url, userAgent, "attachment", null);
                 }
             },
             new BrowserDialog.Item(R.string.dialog_image_search) {

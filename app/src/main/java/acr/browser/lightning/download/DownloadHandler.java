@@ -69,7 +69,7 @@ public class DownloadHandler {
      * @param mimetype           The mimetype of the content reported by the server
      */
     public static void onDownloadStart(@NonNull Activity context, @NonNull PreferenceManager manager, String url, String userAgent,
-                                       @Nullable String contentDisposition, String mimetype) {
+                                       @Nullable String contentDisposition, String mimetype, String path) {
 
         Log.d(TAG, "DOWNLOAD: Trying to download from URL: " + url);
         Log.d(TAG, "DOWNLOAD: Content disposition: " + contentDisposition);
@@ -109,7 +109,7 @@ public class DownloadHandler {
                 }
             }
         }
-        onDownloadStartNoStream(context, manager, url, userAgent, contentDisposition, mimetype);
+        onDownloadStartNoStream(context, manager, url, userAgent, contentDisposition, mimetype, path);
     }
 
     // This is to work around the fact that java.net.URI throws Exceptions
@@ -156,7 +156,7 @@ public class DownloadHandler {
     /* package */
     private static void onDownloadStartNoStream(@NonNull final Activity context, @NonNull PreferenceManager preferences,
                                                 String url, String userAgent,
-                                                String contentDisposition, @Nullable String mimetype) {
+                                                String contentDisposition, @Nullable String mimetype, @Nullable String path) {
         final Bus eventBus = BrowserApp.getBus(context);
         final String filename = URLUtil.guessFileName(url, contentDisposition, mimetype);
 
@@ -209,9 +209,17 @@ public class DownloadHandler {
         // set downloaded file destination to /sdcard/Download.
         // or, should it be set to one of several Environment.DIRECTORY* dirs
         // depending on mimetype?
+
+        String dPath = "";
         String location = preferences.getDownloadDirectory();
         Uri downloadFolder;
-        location = addNecessarySlashes(location);
+
+        if (path != null && path.length() > 0) {
+            location = addNecessarySlashes(location + "/" + path);
+            dPath = path;
+        } else {
+            location = addNecessarySlashes(location);
+        }
         downloadFolder = Uri.parse(location);
 
         File dir = new File(downloadFolder.getPath());
@@ -248,7 +256,7 @@ public class DownloadHandler {
             }
             // We must have long pressed on a link or image to download it. We
             // are not sure of the mimetype in this case, so do a head request
-            new FetchUrlMimeType(context, request, addressString, cookies, userAgent, downloadFolder.getPath().split("/")[downloadFolder.getPath().split("/").length - 1]).start();
+            new FetchUrlMimeType(context, request, addressString, cookies, userAgent, dPath).start();
         } else {
             Log.d(TAG, "Valid mimetype, attempting to download");
             final DownloadManager manager = (DownloadManager) context

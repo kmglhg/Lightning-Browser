@@ -90,16 +90,11 @@ public class GalleryActivity extends Activity {
             public void onClick(View v) {
                 new Timer().schedule(new TimerTask() {
                     public void run() {
-                        String tmpDownloadPath = mPreferenceManager.getDownloadDirectory();
-                        mPreferenceManager.setDownloadDirectory(DownloadHandler.DEFAULT_DOWNLOAD_PATH + "/" + path);
-
                         if (selectedImageItems != null && selectedImageItems.size() > 0) {
                             for (String uri : selectedImageItems) {
-                                mPreferenceManager.setDownloadDirectory(downloadPath);
-                                Utils.downloadFile(GalleryActivity.this, mPreferenceManager, uri, userAgent, "attachment");
+                                Utils.downloadFile(GalleryActivity.this, mPreferenceManager, uri, userAgent, "attachment", path);
                             }
                         }
-                        mPreferenceManager.setDownloadDirectory(tmpDownloadPath);
                     }
                 }, 300);
             }
