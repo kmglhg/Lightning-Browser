@@ -4,20 +4,25 @@
 package acr.browser.lightning.constant;
 
 import android.app.Application;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Base64;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import acr.browser.lightning.R;
 import acr.browser.lightning.app.BrowserApp;
 import acr.browser.lightning.database.BookmarkManager;
+import acr.browser.lightning.database.HistoryItem;
 import acr.browser.lightning.preference.PreferenceManager;
 import acr.browser.lightning.utils.Utils;
 import acr.browser.lightning.view.LightningView;
@@ -35,23 +40,13 @@ public class StartPage extends AsyncTask<Void, Void, Void> {
 
     private static final String HEAD_2 = "</title>"
             + "</head>"
-            + "<style>body{background:#424242;text-align:center;margin:0px;}#search_input{height:35px; "
-            + "width:100%;outline:none;border:none;font-size: 16px;background-color:transparent;}"
-            + "span { display: block; overflow: hidden; padding-left:5px;vertical-align:middle;}"
-            + ".search_bar{display:table;vertical-align:middle;width:90%;height:35px;max-width:500px;margin:0 auto;background-color:#fff;box-shadow: 0px 2px 3px rgba( 0, 0, 0, 0.25 );"
-            + "font-family: Arial;color: #444;-moz-border-radius: 2px;-webkit-border-radius: 2px;border-radius: 2px;}"
-            + "#search_submit{outline:none;height:37px;float:right;color:#404040;font-size:16px;font-weight:bold;border:none;"
-            + "background-color:transparent;}.outer { display: table; position: absolute; height: 100%; width: 100%;}"
-            + ".middle { display: table-cell; vertical-align: middle;}.inner { margin-left: auto; margin-right: auto; "
-            + "margin-bottom:10%; width: 100%;}img.smaller{width:50%;max-width:300px;}"
-            + ".box { vertical-align:middle;position:relative; display: block; margin: 10px;padding-left:10px;padding-right:10px;padding-top:5px;padding-bottom:5px;"
-            + " background-color:#fff;box-shadow: 0px 3px rgba( 0, 0, 0, 0.1 );font-family: Arial;color: #444;"
-            + "font-size: 12px;-moz-border-radius: 2px;-webkit-border-radius: 2px;"
-            + "border-radius: 2px;}</style><body> <div class=\"outer\"><div class=\"middle\"><div class=\"inner\"><img class=\"smaller\" src=\"";
+            + "<style> body { background: #454545; text-align: center; margin: 0px; }  #search_input { height: 35px; width: 100%; outline: none; border: none; font-size: 16px; background-color: transparent; }  span { display: block; overflow: hidden; padding-left: 5px; vertical-align: middle; }  .search_bar { display: block; vertical-align: middle; width: 90%; height: 35px; max-width: 500px; margin: 0 auto; background-color: #fff; box-shadow: 0px 2px 3px rgba( 0, 0, 0, 0.25); font-family: Arial; color: #444; -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px; }  #search_submit { outline: none; height: 37px; float: right; color: #404040; font-size: 16px; font-weight: bold; border: none; background-color: transparent; }  .outer { display: block; height: 100%; width: 100%; margin: 10% 0px 5% 0px; }  .middle { display: block; vertical-align: middle; }  .inner { margin-left: auto; margin-right: auto; width: 100%; }  img.smaller { width: 50%; max-width: 300px; }  .box { vertical-align: middle; position: relative; display: block; margin: 10px; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; background-color: #fff; box-shadow: 0px 3px rgba( 0, 0, 0, 0.1); font-family: Arial; color: #444; font-size: 12px; -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px; } .bookmarks { text-align: left; display: block; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;} .bookmark { height: 30px; padding: 5px; margin: 10px 5%; background-color: #555; } .thumbnail { display: inline-block; margin: 5px 10px; height: 20px; width: 20px; background-size: contain;} .title { margin-left: 10px; height: 30px; line-height: 30px; display: inline-block; color: #f5f5f5; vertical-align: top;}</style>"
+            + "<body> <div class=\"outer\"><div class=\"middle\"><div class=\"inner\"><img class=\"smaller\" src=\"";
 
-    private static final String MIDDLE = "\" ></br></br><form onsubmit=\"return search()\" class=\"search_bar\" autocomplete=\"off\">"
+    private static final String MIDDLE_1 = "\" ></br></br><form onsubmit=\"return search()\" class=\"search_bar\" autocomplete=\"off\">"
             + "<input type=\"submit\" id=\"search_submit\" value=\"Search\" ><span><input class=\"search\" type=\"text\" value=\"\" id=\"search_input\" >"
-            + "</span></form></br></br></div></div></div><script type=\"text/javascript\">function search(){if(document.getElementById(\"search_input\").value != \"\"){window.location.href = \"";
+            + "</span></form></br></br></div></div>";
+    private static final String MIDDLE_2 = "</div><script type=\"text/javascript\">function search(){if(document.getElementById(\"search_input\").value != \"\"){window.location.href = \"";
 
     private static final String END = "\" + document.getElementById(\"search_input\").value;document.getElementById(\"search_input\").value = \"\";}return false;}</script></body></html>";
 
@@ -127,8 +122,29 @@ public class StartPage extends AsyncTask<Void, Void, Void> {
                 break;
         }
 
+        List<HistoryItem> bookmarks = getBookmarks();
+
         homepageBuilder.append(icon);
-        homepageBuilder.append(MIDDLE);
+        homepageBuilder.append(MIDDLE_1);
+
+        String bookmarkHtml = "<div class=\"bookmarks\">";
+        for (HistoryItem bookmark : bookmarks) {
+            Bitmap bitmap = bookmark.getBitmap();
+
+            String enc = "";
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            if (bitmap != null) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream .toByteArray();
+                enc = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+            }
+
+            bookmarkHtml += "<div class=\"bookmark\" onclick=\"javascript:window.location.href='" + bookmark.getUrl() + "'\"><div class=\"thumbnail\" style=\"background-image: url('data:image/png;base64," + enc + "')\"></div><div class=\"title\">" + bookmark.getTitle() + "</div></div>";
+        }
+        bookmarkHtml += "</div>";
+
+        homepageBuilder.append(bookmarkHtml);
+        homepageBuilder.append(MIDDLE_2);
         homepageBuilder.append(searchUrl);
         homepageBuilder.append(END);
 
@@ -145,6 +161,10 @@ public class StartPage extends AsyncTask<Void, Void, Void> {
         }
 
         return Constants.FILE + homepage;
+    }
+
+    private List<HistoryItem> getBookmarks() {
+        return mBookmarkManager.getAllBookmarks(true);
     }
 
     public void load() {

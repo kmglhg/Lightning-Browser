@@ -10,12 +10,15 @@ import acr.browser.lightning.utils.Utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,7 +32,7 @@ public class GalleryActivity extends Activity {
     private GridView gridView;
     private GridViewAdapter gridAdapter;
     private List<String> imageItems;
-    private List<String> selectedImageItems;
+    private HashMap<Integer, String> selectedImageItems;
 
     @Inject PreferenceManager mPreferenceManager;
 
@@ -47,7 +50,7 @@ public class GalleryActivity extends Activity {
 
         Intent intent = getIntent();
         imageItems = intent.getStringArrayListExtra("images");
-        selectedImageItems = new ArrayList<>();
+        selectedImageItems = new HashMap<Integer, String>();
 
         userAgent = intent.getStringExtra("userAgent");
         path = intent.getStringExtra("path");
@@ -70,14 +73,15 @@ public class GalleryActivity extends Activity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                String imageUri = parent.getAdapter().getItem(position).toString();
 
-                if (v.getAlpha() == 1.0) {
+                String imageUri = gridAdapter.getItem(position).toString();
+
+                if (selectedImageItems.get(position) != null && selectedImageItems.get(position).length() > 0) {
                     v.setAlpha(.5f);
-                    selectedImageItems.remove(imageUri);
+                    selectedImageItems.remove(position);
                 } else {
-                    v.setAlpha(1f);
-                    selectedImageItems.add(imageUri);
+                    v.setAlpha(1.0f);
+                    selectedImageItems.put(position, imageUri);
                 }
             }
         });
@@ -91,8 +95,8 @@ public class GalleryActivity extends Activity {
                 new Timer().schedule(new TimerTask() {
                     public void run() {
                         if (selectedImageItems != null && selectedImageItems.size() > 0) {
-                            for (String uri : selectedImageItems) {
-                                Utils.downloadFile(GalleryActivity.this, mPreferenceManager, uri, userAgent, "attachment", path);
+                            for (int key : selectedImageItems.keySet()) {
+                                Utils.downloadFile(GalleryActivity.this, mPreferenceManager, selectedImageItems.get(key), userAgent, "attachment", path);
                             }
                         }
                     }
