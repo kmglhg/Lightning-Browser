@@ -70,10 +70,12 @@ public class LightningWebClient extends WebViewClient {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, @NonNull WebResourceRequest request) {
+
         if (mAdBlock.isAd(request.getUrl().toString())) {
             ByteArrayInputStream EMPTY = new ByteArrayInputStream("".getBytes());
             return new WebResourceResponse("text/plain", "utf-8", EMPTY);
         }
+
         return super.shouldInterceptRequest(view, request);
     }
 
@@ -82,10 +84,12 @@ public class LightningWebClient extends WebViewClient {
     @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+
         if (mAdBlock.isAd(url)) {
             ByteArrayInputStream EMPTY = new ByteArrayInputStream("".getBytes());
             return new WebResourceResponse("text/plain", "utf-8", EMPTY);
         }
+
         return null;
     }
 

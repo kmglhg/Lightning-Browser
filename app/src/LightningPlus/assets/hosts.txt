@@ -47275,7 +47275,6 @@
 127.0.0.1	www.vayavicio.com
 127.0.0.1	www.vdownloadall.com
 127.0.0.1	www.vectormarketing.com
-127.0.0.1	www.venturead.com
 127.0.0.1	www.veruta.com
 127.0.0.1	www.vibrantmedia.com
 127.0.0.1	www.video-loader.com
@@ -47975,4 +47974,4 @@
 127.0.0.1	zz.zeroredirect1.com
 127.0.0.1	zzz.clickbank.net
 127.0.0.1	_thums.ero-advertising.com
-# Hosts: 47967
+# Hosts: 47966
