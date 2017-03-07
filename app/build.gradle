@@ -15,7 +15,6 @@ android {
 
     sourceSets {
         lightningPlus.setRoot('src/LightningPlus')
-        lightningLite.setRoot('src/LightningLite')
     }
 
     buildTypes {
@@ -37,12 +36,6 @@ android {
             buildConfigField "boolean", "FULL_VERSION", "true"
             applicationId "acr.browser.lightning"
             versionCode 90
-        }
-
-        lightningLite {
-            buildConfigField "boolean", "FULL_VERSION", "false"
-            applicationId "acr.browser.barebones"
-            versionCode 92
         }
     }
 
@@ -106,6 +99,6 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
 
     // image library
-    compile 'com.github.bumptech.glide:glide:3.5.2'
+    compile 'com.github.bumptech.glide:glide:3.6.0'
     compile 'com.commit451:PhotoView:1.2.4'
 }

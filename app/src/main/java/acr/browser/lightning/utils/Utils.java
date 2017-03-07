@@ -72,13 +72,13 @@ public final class Utils {
      * @param contentDisposition the content description of the file.
      */
     public static void downloadFile(final Activity activity, final PreferenceManager manager, final String url,
-                                    final String userAgent, final String contentDisposition, final String path) {
+                                    final String userAgent, final String contentDisposition, final String path, final String webUrl) {
         PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsResultAction() {
             @Override
             public void onGranted() {
                 String fileName = URLUtil.guessFileName(url, null, null);
-                DownloadHandler.onDownloadStart(activity, manager, url, userAgent, contentDisposition, null, path);
+                DownloadHandler.onDownloadStart(activity, manager, url, userAgent, contentDisposition, null, path, webUrl);
                 Log.i(Constants.TAG, "Downloading: " + fileName);
             }
 

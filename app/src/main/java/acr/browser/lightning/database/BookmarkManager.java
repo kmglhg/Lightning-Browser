@@ -145,8 +145,7 @@ public class BookmarkManager {
 
         @Override
         public void run() {
-            final File tempFile = new File(mFilesDir,
-                String.format(Locale.US, "bm_%d.dat", System.currentTimeMillis()));
+            final File tempFile = new File(mFilesDir, String.format(Locale.US, "bm_%d.dat", System.currentTimeMillis()));
             final File bookmarksFile = new File(mFilesDir, FILE_BOOKMARKS);
             boolean success = false;
             BufferedWriter bookmarkWriter = null;
@@ -155,6 +154,10 @@ public class BookmarkManager {
                 bookmarkWriter = new BufferedWriter(new FileWriter(tempFile, false));
                 JSONObject object = new JSONObject();
                 for (HistoryItem item : mBookmarks) {
+                    Log.d("TESTTEST", item.getTitle() + " | " + item.getOrder());
+                    Log.d("TESTTEST", item.getTitle() + " | " + item.getOrder());
+                    Log.d("TESTTEST", item.getTitle() + " | " + item.getOrder());
+
                     object.put(TITLE, item.getTitle());
                     object.put(URL, item.getUrl());
                     object.put(FOLDER, item.getFolder());
@@ -199,6 +202,8 @@ public class BookmarkManager {
         if (mBookmarksMap.containsKey(url)) {
             return false;
         }
+        item.setOrder(mBookmarksMap.size());
+
         mBookmarksMap.put(url, item);
         mExecutor.execute(new BookmarksWriter(new LinkedList<>(mBookmarksMap.values())));
         return true;

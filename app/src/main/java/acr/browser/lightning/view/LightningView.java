@@ -948,7 +948,7 @@ public class LightningView {
             if (url != null) {
                 if (result != null) {
                     if (result.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE || result.getType() == WebView.HitTestResult.IMAGE_TYPE) {
-                        mBookmarksDialogBuilder.showLongPressImageDialog(mActivity, url, getUserAgent());
+                        mBookmarksDialogBuilder.showLongPressImageDialog(mActivity, url, getUserAgent(), currentUrl);
                     } else {
                         mBookmarksDialogBuilder.showLongPressLinkDialog(mActivity, url);
                     }
@@ -958,7 +958,7 @@ public class LightningView {
             } else if (result != null && result.getExtra() != null) {
                 final String newUrl = result.getExtra();
                 if (result.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE || result.getType() == WebView.HitTestResult.IMAGE_TYPE) {
-                    mBookmarksDialogBuilder.showLongPressImageDialog(mActivity, newUrl, getUserAgent());
+                    mBookmarksDialogBuilder.showLongPressImageDialog(mActivity, newUrl, getUserAgent(), currentUrl);
                 } else {
                     mBookmarksDialogBuilder.showLongPressLinkDialog(mActivity, newUrl);
                 }

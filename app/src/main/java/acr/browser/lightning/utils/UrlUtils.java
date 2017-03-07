@@ -23,6 +23,7 @@ import android.webkit.URLUtil;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import acr.browser.lightning.constant.AllImagesPage;
 import acr.browser.lightning.constant.BookmarkPage;
 import acr.browser.lightning.constant.Constants;
 import acr.browser.lightning.constant.HistoryPage;
@@ -195,5 +196,9 @@ public class UrlUtils {
      */
     public static boolean isStartPageUrl(@Nullable String url) {
         return url != null && url.startsWith(Constants.FILE) && url.endsWith(StartPage.FILENAME);
+    }
+
+    public static boolean isAllImagesUrl(@Nullable String url) {
+        return url != null && url.startsWith(Constants.FILE) && url.endsWith(AllImagesPage.FILENAME);
     }
 }

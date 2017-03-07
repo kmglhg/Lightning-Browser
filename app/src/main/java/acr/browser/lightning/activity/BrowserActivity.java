@@ -62,6 +62,7 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.webkit.WebIconDatabase;
@@ -92,6 +93,9 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -105,6 +109,7 @@ import acr.browser.lightning.browser.BrowserView;
 import acr.browser.lightning.browser.TabsView;
 import acr.browser.lightning.bus.BookmarkEvents;
 import acr.browser.lightning.bus.BrowserEvents;
+import acr.browser.lightning.constant.AllImagesPage;
 import acr.browser.lightning.constant.BookmarkPage;
 import acr.browser.lightning.constant.Constants;
 import acr.browser.lightning.constant.HistoryPage;
@@ -788,7 +793,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                     Utils.createShortcut(this, shortcut);
                 }
                 return true;
-            case R.id.action_get_all_images:
+            case R.id.action_all_images:
                 new GetAllImagesTask(new GetAllImagesCallback() {
                     @Override
                     public void callback(ArrayList<String> images) {
@@ -796,6 +801,7 @@ public abstract class BrowserActivity extends ThemableBrowserActivity implements
                         intent.putStringArrayListExtra("images", images);
                         intent.putExtra("path", getPath(mTabsManager.getCurrentWebView().getUrl()));
                         intent.putExtra("userAgent", mTabsManager.getCurrentWebView().getSettings().getUserAgentString());
+                        intent.putExtra("url", currentUrl);
                         startActivity(intent);
                     }
                 }).execute(currentUrl);

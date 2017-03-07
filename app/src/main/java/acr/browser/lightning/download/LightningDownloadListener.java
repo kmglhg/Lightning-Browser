@@ -49,7 +49,7 @@ public class LightningDownloadListener implements DownloadListener {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
                                     DownloadHandler.onDownloadStart(mActivity, mPreferenceManager, url, userAgent,
-                                        contentDisposition, mimetype, null);
+                                        contentDisposition, mimetype, null, null);
                                     break;
                                 case DialogInterface.BUTTON_NEGATIVE:
                                     break;

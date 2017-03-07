@@ -232,7 +232,7 @@ public class LightningDialogBuilder {
 
     // TODO There should be a way in which we do not need an activity reference to dowload a file
     public void showLongPressImageDialog(@NonNull final Activity activity, @NonNull final String url,
-                                         @NonNull final String userAgent) {
+                                         @NonNull final String userAgent, @NonNull final String webUrl) {
         BrowserDialog.show(activity, url.replace(Constants.HTTP, ""),
             new BrowserDialog.Item(R.string.dialog_open_new_tab) {
                 @Override
@@ -257,7 +257,7 @@ public class LightningDialogBuilder {
                 public void onClick() {
 
 
-                    Utils.downloadFile(activity, mPreferenceManager, url, userAgent, "attachment", null);
+                    Utils.downloadFile(activity, mPreferenceManager, url, userAgent, "attachment", null, webUrl);
                 }
             },
             new BrowserDialog.Item(R.string.dialog_image_search) {

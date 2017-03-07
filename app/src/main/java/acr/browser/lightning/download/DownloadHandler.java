@@ -44,6 +44,7 @@ public class DownloadHandler {
 
     private static final String TAG = DownloadHandler.class.getSimpleName();
     private static final String COOKIE_REQUEST_HEADER = "Cookie";
+    private static final String REFERER_REQUEST_HEADER = "referer";
 
     public static final String DEFAULT_DOWNLOAD_PATH =
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -69,7 +70,7 @@ public class DownloadHandler {
      * @param mimetype           The mimetype of the content reported by the server
      */
     public static void onDownloadStart(@NonNull Activity context, @NonNull PreferenceManager manager, String url, String userAgent,
-                                       @Nullable String contentDisposition, String mimetype, String path) {
+                                       @Nullable String contentDisposition, String mimetype, String path, String webUrl) {
 
         Log.d(TAG, "DOWNLOAD: Trying to download from URL: " + url);
         Log.d(TAG, "DOWNLOAD: Content disposition: " + contentDisposition);
@@ -109,7 +110,7 @@ public class DownloadHandler {
                 }
             }
         }
-        onDownloadStartNoStream(context, manager, url, userAgent, contentDisposition, mimetype, path);
+        onDownloadStartNoStream(context, manager, url, userAgent, contentDisposition, mimetype, path, webUrl);
     }
 
     // This is to work around the fact that java.net.URI throws Exceptions
@@ -156,7 +157,7 @@ public class DownloadHandler {
     /* package */
     private static void onDownloadStartNoStream(@NonNull final Activity context, @NonNull PreferenceManager preferences,
                                                 String url, String userAgent,
-                                                String contentDisposition, @Nullable String mimetype, @Nullable String path) {
+                                                String contentDisposition, @Nullable String mimetype, @Nullable String path, @Nullable String webUrl) {
         final Bus eventBus = BrowserApp.getBus(context);
         final String filename = URLUtil.guessFileName(url, contentDisposition, mimetype);
 
@@ -244,6 +245,11 @@ public class DownloadHandler {
         request.setDescription(webAddress.getHost());
         // XXX: Have to use the old url since the cookies were stored using the
         // old percent-encoded url.
+
+        if (webUrl != null && webUrl.length() > 0) {
+            request.addRequestHeader(REFERER_REQUEST_HEADER, webUrl);
+        }
+
         String cookies = CookieManager.getInstance().getCookie(url);
         request.addRequestHeader(COOKIE_REQUEST_HEADER, cookies);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
