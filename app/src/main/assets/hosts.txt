@@ -16845,6 +16845,7 @@
 127.0.0.1	ads.dfiles.ru
 127.0.0.1	ads.dgonn.com
 127.0.0.1	ads.dhakatribune.com
+127.0.0.1	ads.diamonds
 127.0.0.1	ads.digital-digest.com
 127.0.0.1	ads.digitalhealthcare.com
 127.0.0.1	ads.digitalmedianet.com
@@ -28037,6 +28038,7 @@
 127.0.0.1	enews.bfast.com
 127.0.0.1	enewsletters.ziffdavisinternet.com
 127.0.0.1	enfintrouver.com
+127.0.0.1	engage.morespeck.com
 127.0.0.1	engagebdr.com
 127.0.0.1	engine.4dsply.com
 127.0.0.1	engine.a.redditmedia.com
@@ -33093,6 +33095,7 @@
 127.0.0.1	mediauk.247realmedia.com
 127.0.0.1	mediavisor.doubleclick.com
 127.0.0.1	mediavisor.doubleclick.net
+127.0.0.1	mediawhirl.net
 127.0.0.1	mediciinternet.go2cloud.org
 127.0.0.1	medicinenet.us.intellitxt.com
 127.0.0.1	medio.com
@@ -36415,7 +36418,6 @@
 127.0.0.1	roia.hutchmedia.com
 127.0.0.1	roiadtracker.com
 127.0.0.1	roitracker.com
-127.0.0.1	rollbar.com
 127.0.0.1	romanticfm.2cnt.net
 127.0.0.1	romview.atdmt.com.915.9004.302br.net
 127.0.0.1	ronaldheft.com
@@ -38695,7 +38697,6 @@
 127.0.0.1	tag.gamecentral.hiro.tv
 127.0.0.1	tag.gstat.orangeportails.net
 127.0.0.1	tag.myplay.com
-127.0.0.1	tag.navdmp.com
 127.0.0.1	tag.reachadv.it
 127.0.0.1	tag.researchnow.com
 127.0.0.1	tag.shopping-feed.com
@@ -39842,6 +39843,7 @@
 127.0.0.1	trk.vidible.tv
 127.0.0.1	trk.vindicosuite.com
 127.0.0.1	trk02.gtrk.info
+127.0.0.1	trk1.opanw.com
 127.0.0.1	trk2it4.com
 127.0.0.1	trk4.com
 127.0.0.1	trkag1.com
@@ -46522,6 +46524,7 @@
 127.0.0.1	www.mediamind.com
 127.0.0.1	www.mediaplex.com
 127.0.0.1	www.mediasheva.com
+127.0.0.1	www.mediawhirl.net
 127.0.0.1	www.medio.com
 127.0.0.1	www.meethotties.mobi
 127.0.0.1	www.megacounter.de
@@ -46918,7 +46921,6 @@
 127.0.0.1	www.robotreplay.com
 127.0.0.1	www.roiadtracker.com
 127.0.0.1	www.roitracker.com
-127.0.0.1	www.rollbar.com
 127.0.0.1	www.rotrk.com
 127.0.0.1	www.roxyaffiliates.com
 127.0.0.1	www.rsmrttracking.com
@@ -48012,4 +48014,4 @@
 127.0.0.1	zz.zeroredirect1.com
 127.0.0.1	zzz.clickbank.net
 127.0.0.1	_thums.ero-advertising.com
-# Hosts: 48004
+# Hosts: 48006

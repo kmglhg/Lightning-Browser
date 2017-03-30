@@ -1,6 +1,8 @@
 package acr.browser.lightning.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import acr.browser.lightning.R;
@@ -74,7 +79,7 @@ public class GridViewAdapter extends ArrayAdapter {
         if (data.get(position).isSelected()) {
             holder.image.setAlpha(1.0f);
         } else {
-            holder.image.setAlpha(0.5f);
+            holder.image.setAlpha(0.3f);
         }
         return row;
     }

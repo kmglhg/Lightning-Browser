@@ -28,8 +28,9 @@ public final class Constants {
     public static final String WIKIPEDIA_SEARCH = "https://ko.m.wikipedia.org/wiki/";
 
 //    public static final String GOOGLE_IMAGE_SEARCH = "https://www.google.com/search?tbm=isch&q=";
-    public static final String GOOGLE_IMAGE_SEARCH = "https://www.google.com/searchbyimage?&image_url=";
+    public static final String GOOGLE_IMAGE_SEARCH = "https://www.google.com/searchbyimage?image_url=";
 
+    public static final String HOSTS_URL = "https://hosts-file.net/ad_servers.txt";
 
     // Custom local page schemes
     public static final String SCHEME_HOMEPAGE = "about:home";

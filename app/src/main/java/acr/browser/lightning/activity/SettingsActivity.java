@@ -20,6 +20,7 @@ import java.util.List;
 
 import acr.browser.lightning.R;
 import acr.browser.lightning.app.BrowserApp;
+import acr.browser.lightning.async.SyncHostsTask;
 
 public class SettingsActivity extends ThemableSettingsActivity {
 
@@ -41,6 +42,8 @@ public class SettingsActivity extends ThemableSettingsActivity {
         Toolbar toolbar = (Toolbar) toolbarContainer.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        new SyncHostsTask(BrowserApp.get(this)).execute();
     }
 
     @Override

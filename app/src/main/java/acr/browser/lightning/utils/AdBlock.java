@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -61,8 +63,12 @@ public class AdBlock {
                 BufferedReader reader = null;
                 try {
                     //noinspection IOResourceOpenedButNotSafelyClosed
-                    reader = new BufferedReader(new InputStreamReader(
-                        asset.open(BLOCKED_DOMAINS_LIST_FILE_NAME)));
+                    File file = new File(context.getFilesDir() + "/hosts.txt");
+                    if (file.exists()) {
+                        reader = new BufferedReader(new InputStreamReader(new FileInputStream(context.getFilesDir() + "/hosts.txt")));
+                    } else {
+                        reader = new BufferedReader(new InputStreamReader(asset.open(BLOCKED_DOMAINS_LIST_FILE_NAME)));
+                    }
                     String line;
                     while ((line = reader.readLine()) != null) {
                         mBlockedDomainsList.add(line.trim());
@@ -145,8 +151,12 @@ public class AdBlock {
                 BufferedReader reader = null;
                 try {
                     //noinspection IOResourceOpenedButNotSafelyClosed
-                    reader = new BufferedReader(new InputStreamReader(
-                        asset.open(BLOCKED_DOMAINS_LIST_FILE_NAME)));
+                    File file = new File(context.getFilesDir() + "/hosts.txt");
+                    if (file.exists()) {
+                        reader = new BufferedReader(new InputStreamReader(new FileInputStream(context.getFilesDir() + "/hosts.txt")));
+                    } else {
+                        reader = new BufferedReader(new InputStreamReader(asset.open(BLOCKED_DOMAINS_LIST_FILE_NAME)));
+                    }
                     String line;
                     while ((line = reader.readLine()) != null) {
                         if (!line.isEmpty() && !line.startsWith(COMMENT)) {
